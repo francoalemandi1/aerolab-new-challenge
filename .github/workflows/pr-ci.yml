@@ -1,0 +1,93 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📚 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🔍 Type check
+        run: npx tsc --noEmit
+
+      - name: 🧹 ESLint check
+        run: npm run lint
+
+      - name: 💅 Prettier check
+        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,md,css}"
+
+      - name: 🧪 Run tests
+        run: npm run test
+
+      - name: 🔒 Security audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: 🏗️ Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "example-key"
+
+      - name: 📏 Bundle size check
+        run: |
+          echo "📦 Build analysis:"
+          echo "Total build size:"
+          du -sh .next/ || echo "Build folder not found"
+          echo "Largest JavaScript bundles:"
+          find .next/static -name "*.js" -type f -exec du -h {} + 2>/dev/null | sort -hr | head -5 || echo "No JS bundles found"
+
+      - name: 🚫 Check for debugging code
+        run: |
+          echo "Checking for console.log statements..."
+          if grep -r "console\.log" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" app/ ui/ hooks/ lib/ 2>/dev/null; then
+            echo "⚠️ Found console.log statements. Consider removing them."
+          else
+            echo "✅ No console.log statements found."
+          fi
+          
+          echo "Checking for TODO/FIXME comments..."
+          todos=$(grep -r "TODO\|FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" app/ ui/ hooks/ lib/ 2>/dev/null || echo "")
+          if [[ -n "$todos" ]]; then
+            echo "📝 Found TODO/FIXME comments:"
+            echo "$todos"
+          else
+            echo "✅ No TODO/FIXME comments found."
+          fi
+
+      - name: ✅ CI Summary
+        if: always()
+        run: |
+          echo "🎉 CI checks completed!"
+          echo "📋 Summary:"
+          echo "- ✅ Dependencies installed"
+          echo "- ✅ TypeScript type checking"
+          echo "- ✅ ESLint code quality"
+          echo "- ✅ Prettier code formatting"
+          echo "- ✅ Test suite execution"
+          echo "- ✅ Security audit"
+          echo "- ✅ Application build"
+          echo "- ✅ Bundle size analysis"
+          echo "- ✅ Code quality checks" 

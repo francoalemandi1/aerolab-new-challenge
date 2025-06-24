@@ -5,39 +5,47 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
 ## 🚀 Tech Stack
 
 ### Core Technologies
+
 - **Next.js 15** - React framework with App Router
 - **TypeScript** - Type safety and better developer experience
 - **Tailwind CSS** - Utility-first CSS framework
 - **Supabase** - Backend-as-a-Service with authentication and database
 
 ### UI & Animation
+
 - **shadcn/ui** - Modern, accessible UI components
 - **Radix UI** - Unstyled, accessible UI primitives
 - **Framer Motion** - Smooth animations and micro-interactions
 - **Lucide Icons** - Beautiful, customizable icon library
 
 ### Forms & Validation
+
 - **React Hook Form** - Performant form library
 - **Zod** - TypeScript-first schema validation
 
 ### Data Fetching & State Management
+
 - **TanStack Query (React Query)** - Server state management
 - **React Virtual** - Virtualization for large lists
 
 ### Testing
+
 - **Vitest** - Fast unit testing framework
 - **React Testing Library** - Component testing utilities
 - **Storybook** - Component development and testing
 
 ### Developer Tools
+
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **TypeScript** - Static type checking
 
 ### Email & Communication
+
 - **Mailgun** - Transactional email service
 
 ### Deployment & CI/CD
+
 - **Vercel** - Production and staging deployments
 - **GitHub Actions** - Continuous integration and deployment
 
@@ -66,21 +74,24 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd aerolab-challenge
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Fill in your environment variables in `.env.local`:
    - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
@@ -89,6 +100,7 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
    - `MAILGUN_DOMAIN` - Your Mailgun domain
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -159,6 +171,23 @@ CREATE TRIGGER on_auth_user_created
 - `npm run build-storybook` - Build Storybook
 - `npm run test-storybook` - Run Storybook tests
 
+## 🛡️ Branch Protection & Git Hooks
+
+This project enforces code quality and security through:
+
+- **Husky Git Hooks**: Pre-commit and commit message validation
+- **Branch Protection Rules**: Prevent direct pushes to main, require PR reviews and passing CI checks
+- **GitHub Actions**: Automated testing, security audits, and deployment
+
+**Important**: Direct pushes to `main` are blocked. All changes must go through Pull Requests with:
+
+- ✅ Passing tests and linting
+- ✅ Code review approval
+- ✅ Up-to-date branch
+- ✅ Conventional commit messages
+
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for detailed development workflow and [docs/BRANCH-PROTECTION.md](docs/BRANCH-PROTECTION.md) for branch protection setup.
+
 ## 🏗️ Project Structure
 
 ```
@@ -167,7 +196,7 @@ aerolab-challenge/
 │   ├── auth/               # Authentication routes
 │   │   ├── ui/            # Route-specific UI components
 │   │   │   ├── atoms/     # Basic auth components
-│   │   │   ├── molecules/ # Composed auth components  
+│   │   │   ├── molecules/ # Composed auth components
 │   │   │   ├── organisms/ # Complex auth forms
 │   │   │   └── templates/ # Auth page templates
 │   │   └── signin/        # Sign in page
@@ -197,12 +226,14 @@ aerolab-challenge/
 This project follows **Atomic Design** principles for component organization:
 
 ### Global Components (`/ui`)
+
 - **Atoms**: Basic building blocks (Button, Input, etc.)
 - **Molecules**: Simple groups of atoms (Form fields, etc.)
 - **Organisms**: Complex components made of molecules/atoms
 - **Templates**: Page-level layout components
 
 ### Route-Specific Components (`/app/[route]/ui`)
+
 Each route segment can have its own UI folder with the same atomic structure for components specific to that route.
 
 ## 🚀 Deployment
@@ -216,6 +247,7 @@ Each route segment can have its own UI folder with the same atomic structure for
 ### Manual Deployment
 
 1. Build the application:
+
    ```bash
    npm run build
    ```
@@ -228,16 +260,19 @@ Each route segment can have its own UI folder with the same atomic structure for
 ## 🧪 Testing
 
 Run tests with:
+
 ```bash
 npm run test
 ```
 
 Run tests with coverage:
+
 ```bash
 npm run test:coverage
 ```
 
 Run Storybook:
+
 ```bash
 npm run storybook
 ```

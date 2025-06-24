@@ -1,0 +1,39 @@
+# Global code owners
+# These owners will be requested for review when anyone opens a pull request
+
+# Global fallback for all files
+* @francoalemandi1
+
+# Core application files
+/app/ @francoalemandi1
+/ui/ @francoalemandi1
+/lib/ @francoalemandi1
+/hooks/ @francoalemandi1
+
+# Configuration files require careful review
+package.json @francoalemandi1
+package-lock.json @francoalemandi1
+tsconfig.json @francoalemandi1
+next.config.ts @francoalemandi1
+tailwind.config.ts @francoalemandi1
+vitest.config.ts @francoalemandi1
+middleware.ts @francoalemandi1
+
+# Environment and security files
+.env.example @francoalemandi1
+.gitignore @francoalemandi1
+
+# CI/CD and GitHub configuration
+.github/ @francoalemandi1
+.husky/ @francoalemandi1
+
+# Documentation
+docs/ @francoalemandi1
+README.md @francoalemandi1
+
+# Critical dependencies and security
+# These require extra attention
+/lib/supabase.ts @francoalemandi1
+/lib/mailgun.ts @francoalemandi1
+/middleware.ts @francoalemandi1
+/app/api/ @francoalemandi1 

@@ -19,7 +19,8 @@
     "test-storybook": "test-storybook",
     "chromatic": "npx chromatic --project-token=CHROMATIC_PROJECT_TOKEN",
     "prepare": "husky",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "check-protection": "bash scripts/check-protection.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

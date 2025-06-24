@@ -1,5 +1,6 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -52,7 +53,9 @@
   body {
     background: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
 
@@ -62,25 +65,25 @@
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: both;
   }
-  
+
   .animate-out {
     animation-duration: 150ms;
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: both;
   }
-  
+
   .fade-in {
     animation-name: fade-in;
   }
-  
+
   .fade-out {
     animation-name: fade-out;
   }
-  
+
   .slide-in-from-top {
     animation-name: slide-in-from-top;
   }
-  
+
   .slide-out-to-top {
     animation-name: slide-out-to-top;
   }

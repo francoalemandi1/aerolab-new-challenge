@@ -1,0 +1,116 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  pr-info:
+    name: PR Information
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR Info
+        run: |
+          echo "🔍 Checking PR #${{ github.event.number }}"
+          echo "📝 Title: ${{ github.event.pull_request.title }}"
+          echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+          echo "🌿 Branch: ${{ github.head_ref }} → ${{ github.base_ref }}"
+
+  lint-commit-messages:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        run: |
+          # Get commits in this PR
+          commits=$(git log --pretty=format:"%s" ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+          
+          # Regex for conventional commits
+          regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .{1,50}'
+          
+          echo "Checking commit messages..."
+          echo "$commits" | while read -r commit; do
+            if [[ ! "$commit" =~ $regex ]]; then
+              echo "❌ Invalid commit message: $commit"
+              echo "Expected format: type(scope): description"
+              exit 1
+            else
+              echo "✅ Valid commit message: $commit"
+            fi
+          done
+
+  validate-changes:
+    name: Validate Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check for console.log
+        run: |
+          if grep -r "console\.log" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" app/ ui/ hooks/ lib/ --exclude-dir=node_modules; then
+            echo "❌ Found console.log statements. Please remove them before merging."
+            exit 1
+          else
+            echo "✅ No console.log statements found."
+          fi
+
+      - name: Check for TODO comments
+        run: |
+          todos=$(grep -r "TODO\|FIXME" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" app/ ui/ hooks/ lib/ --exclude-dir=node_modules || true)
+          if [[ -n "$todos" ]]; then
+            echo "⚠️ Found TODO/FIXME comments:"
+            echo "$todos"
+            echo "Consider addressing these before merging."
+          else
+            echo "✅ No TODO/FIXME comments found."
+          fi
+
+      - name: Run full test suite
+        run: npm run test:coverage
+
+      - name: Build check
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: "https://test.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-key"
+
+  size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build and analyze
+        run: |
+          npm run build
+          echo "📦 Build size analysis:"
+          du -sh .next/
+          find .next/static -name "*.js" -exec du -h {} \; | sort -h | tail -10 

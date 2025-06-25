@@ -10,7 +10,10 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   ({ className, ...props }, ref) => {
     return (
       <div className="relative w-full">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200" />
+        <Search
+          className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200"
+          data-testid="search-icon"
+        />
         <input
           ref={ref}
           className={cn(

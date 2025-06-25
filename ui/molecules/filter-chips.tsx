@@ -40,6 +40,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
     <>
       {/* Versión normal (en el flujo del documento) */}
       <div
+        data-testid="normal-chips"
         className={cn(
           "flex flex-wrap justify-start gap-2 transition-opacity duration-300",
           isFixed ? "pointer-events-none opacity-0" : "opacity-100",
@@ -59,6 +60,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
 
       {/* Versión fixed (cuando se hace scroll) */}
       <div
+        data-testid="fixed-chips"
         className={cn(
           "fixed left-1/2 top-4 z-50 -translate-x-1/2 rounded-full bg-white/90 p-1 shadow-lg backdrop-blur-sm transition-all duration-300",
           isFixed

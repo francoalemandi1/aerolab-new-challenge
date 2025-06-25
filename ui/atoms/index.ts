@@ -15,3 +15,4 @@ export * from "./search-input";
 export * from "./chip";
 export * from "./game-card";
 export * from "./command";
+export * from "./default-image";

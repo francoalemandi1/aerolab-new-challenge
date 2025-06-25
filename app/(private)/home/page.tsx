@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { redirect } from "next/navigation";
-import { GamingTemplate } from "@/ui/templates";
+import { HomeClient } from "./home-client";
 
 export const metadata: Metadata = {
   title: "Gaming Haven Z - Saved Games",
@@ -20,5 +20,5 @@ export default async function HomePage() {
     redirect("/auth/signin");
   }
 
-  return <GamingTemplate />;
+  return <HomeClient hasGames={true} />;
 }

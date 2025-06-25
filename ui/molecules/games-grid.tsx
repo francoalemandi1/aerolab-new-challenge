@@ -13,6 +13,7 @@ interface Game {
 interface GamesGridProps {
   games?: Game[];
   onDeleteGame?: (id: string) => void;
+  onGameClick?: (id: string) => void;
   className?: string;
 }
 
@@ -95,11 +96,17 @@ const mockGames: Game[] = [
 export const GamesGrid: React.FC<GamesGridProps> = ({
   games = mockGames,
   onDeleteGame,
+  onGameClick,
   className,
 }) => {
   const handleDeleteGame = (id: string) => {
     console.log("Deleting game:", id);
     onDeleteGame?.(id);
+  };
+
+  const handleGameClick = (id: string) => {
+    console.log("Clicking game:", id);
+    onGameClick?.(id);
   };
 
   return (
@@ -111,6 +118,7 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
           title={game.title}
           imageUrl={game.imageUrl}
           onDelete={handleDeleteGame}
+          onClick={handleGameClick}
         />
       ))}
     </div>

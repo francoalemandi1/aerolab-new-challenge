@@ -10,6 +10,7 @@ interface GameCardProps {
   title: string;
   imageUrl: string;
   onDelete?: (id: string) => void;
+  onClick?: (id: string) => void;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export const GameCard: React.FC<GameCardProps> = ({
   title,
   imageUrl,
   onDelete,
+  onClick,
   className,
 }) => {
   const handleDelete = (e: React.MouseEvent) => {
@@ -25,8 +27,15 @@ export const GameCard: React.FC<GameCardProps> = ({
     onDelete?.(id);
   };
 
+  const handleClick = () => {
+    onClick?.(id);
+  };
+
   return (
-    <div className={cn("group relative", className)}>
+    <div
+      className={cn("group relative cursor-pointer", className)}
+      onClick={handleClick}
+    >
       {/* Game Image */}
       <div className="relative aspect-[4/5] overflow-hidden rounded-lg">
         <Image

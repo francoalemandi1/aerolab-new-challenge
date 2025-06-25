@@ -8,3 +8,4 @@ export * from "./empty-state";
 export * from "./filter-chips";
 export * from "./games-grid";
 export * from "./game-search";
+export * from "./media-carousel";

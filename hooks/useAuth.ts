@@ -4,11 +4,21 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { type User, type Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import type {
+  SignInFormData,
+  SignUpFormData,
+  ForgotPasswordFormData,
+  ResetPasswordFormData,
+} from "@/lib/validations";
 
 interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
+}
+
+interface AuthError {
+  message: string;
 }
 
 export function useAuth() {
@@ -22,8 +32,11 @@ export function useAuth() {
   useEffect(() => {
     // Get initial session
     const getSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
       if (error) {
         console.error("Error getting session:", error);
       }
@@ -38,37 +51,158 @@ export function useAuth() {
     getSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setAuthState({
-          user: session?.user ?? null,
-          session,
-          loading: false,
-        });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log(
+        "🔄 Auth state changed:",
+        event,
+        session?.user?.email || "No user"
+      );
 
-        if (event === "SIGNED_IN") {
-          router.refresh();
-        }
+      setAuthState({
+        user: session?.user ?? null,
+        session,
+        loading: false,
+      });
 
-        if (event === "SIGNED_OUT") {
-          router.push("/auth/signin");
-        }
+      // Let middleware handle redirections by refreshing the page
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+        router.refresh();
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, [router]);
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Error signing out:", error);
-      throw error;
+  const signIn = async (
+    data: SignInFormData
+  ): Promise<{ error?: AuthError }> => {
+    try {
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: result.error || "Sign in failed" } };
+      }
+
+      return {};
+    } catch (error) {
+      console.error("Sign in error:", error);
+      return { error: { message: "An unexpected error occurred" } };
+    }
+  };
+
+  const signUp = async (
+    data: SignUpFormData
+  ): Promise<{ error?: AuthError }> => {
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: result.error || "Sign up failed" } };
+      }
+
+      return {};
+    } catch (error) {
+      console.error("Sign up error:", error);
+      return { error: { message: "An unexpected error occurred" } };
+    }
+  };
+
+  const signOut = async (): Promise<{ error?: AuthError }> => {
+    try {
+      const response = await fetch("/api/auth/signout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: result.error || "Sign out failed" } };
+      }
+
+      return {};
+    } catch (error) {
+      console.error("Sign out error:", error);
+      return { error: { message: "An unexpected error occurred" } };
+    }
+  };
+
+  const forgotPassword = async (
+    data: ForgotPasswordFormData
+  ): Promise<{ error?: AuthError }> => {
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: result.error || "Password reset failed" } };
+      }
+
+      return {};
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      return { error: { message: "An unexpected error occurred" } };
+    }
+  };
+
+  const resetPassword = async (
+    data: ResetPasswordFormData
+  ): Promise<{ error?: AuthError }> => {
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: result.error || "Password reset failed" } };
+      }
+
+      return {};
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return { error: { message: "An unexpected error occurred" } };
     }
   };
 
   return {
     ...authState,
+    signIn,
+    signUp,
     signOut,
+    forgotPassword,
+    resetPassword,
   };
-} 
+}

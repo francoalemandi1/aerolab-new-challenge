@@ -11,3 +11,6 @@ export {
   GradientText,
   TypographyShowcase,
 } from "./typography";
+export * from "./search-input";
+export * from "./chip";
+export * from "./game-card";

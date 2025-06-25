@@ -2,9 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
-const supabaseUrl = "https://khtofbsmyzytfmmwltqs.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtodG9mYnNteXp5dGZtbXdsdHFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODMzNzUsImV4cCI6MjA2NjM1OTM3NX0.LeakPUprXvn-9bJnL0fAGVpuElopi3ykcoDrgl-kYZg";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase environment variables");
@@ -71,14 +70,23 @@ export const createSupabaseMiddlewareClient = (
   });
 };
 
-// For server-side operations with service role
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtodG9mYnNteXp5dGZtbXdsdHFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDc4MzM3NSwiZXhwIjoyMDY2MzU5Mzc1fQ.w5l0m3NQ93AZFh4tdT_fqGRyzsZVPNvseZd39brUZOg",
-  {
+// Server-only function for service role operations
+export const createSupabaseAdminClient = () => {
+  // This function should only be called server-side
+  if (typeof window !== "undefined") {
+    throw new Error("Admin client should only be used server-side");
+  }
+
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY environment variable");
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
-  }
-);
+  });
+};

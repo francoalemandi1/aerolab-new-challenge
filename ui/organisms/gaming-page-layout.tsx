@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { H1 } from "@/ui/atoms";
-import { SearchInput } from "@/ui/atoms";
 import {
   AppHeader,
   EmptyState,
   FilterChips,
   FilterType,
   GamesGrid,
+  GameSearch,
 } from "@/ui/molecules";
 import Image from "next/image";
 
@@ -35,6 +35,15 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
     // Aquí se implementará la lógica de eliminación más adelante
   };
 
+  const handleGameSelect = (game: {
+    id: string;
+    title: string;
+    imageUrl: string;
+  }) => {
+    console.log("Game selected:", game);
+    // Aquí se implementará la lógica para agregar el juego a la colección
+  };
+
   return (
     <div className={cn("relative min-h-screen bg-gray-white", className)}>
       {/* Background Image - SVG High Quality */}
@@ -57,7 +66,10 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
 
         {/* Search */}
         <div className="mb-8">
-          <SearchInput placeholder="Search games..." />
+          <GameSearch
+            placeholder="Search games..."
+            onGameSelect={handleGameSelect}
+          />
         </div>
 
         {/* Saved games section */}

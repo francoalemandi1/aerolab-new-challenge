@@ -14,3 +14,4 @@ export {
 export * from "./search-input";
 export * from "./chip";
 export * from "./game-card";
+export * from "./command";

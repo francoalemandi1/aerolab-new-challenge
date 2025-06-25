@@ -11,16 +11,17 @@ import {
   GamesGrid,
   GameSearch,
 } from "@/ui/molecules";
-import Image from "next/image";
 
 interface GamingPageLayoutProps {
   className?: string;
   hasGames?: boolean; // Prop para controlar si hay games o no
+  onGameClick?: (gameId: string) => void;
 }
 
 export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
   className,
   hasGames = false, // Por defecto false para mostrar empty state
+  onGameClick,
 }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("last-added");
 
@@ -45,56 +46,43 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
   };
 
   return (
-    <div className={cn("relative min-h-screen bg-gray-white", className)}>
-      {/* Background Image - SVG High Quality */}
-      <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
-        <Image
-          src="/home-absolute-bg.svg"
-          alt="Background"
-          fill
-          className="object-cover object-top"
-          priority
-          quality={100}
-          sizes="100vw"
+    <div className={cn("px-6 py-8", className)}>
+      {/* Header */}
+      <AppHeader title="Gaming Haven Z" className="mb-8" />
+
+      {/* Search */}
+      <div className="mb-8">
+        <GameSearch
+          placeholder="Search games..."
+          onGameSelect={handleGameSelect}
         />
       </div>
 
-      {/* Content with overlay */}
-      <div className="relative z-10 px-6 py-8">
-        {/* Header */}
-        <AppHeader title="Gaming Haven Z" className="mb-8" />
+      {/* Saved games section */}
+      <div className="mb-6">
+        <H1 className="mb-6 text-violet-600">Saved games</H1>
 
-        {/* Search */}
-        <div className="mb-8">
-          <GameSearch
-            placeholder="Search games..."
-            onGameSelect={handleGameSelect}
+        {/* Filter Chips - Solo se muestran si hay games */}
+        {hasGames && (
+          <FilterChips
+            activeFilter={activeFilter}
+            onFilterChange={handleFilterChange}
+            className="mb-6"
           />
-        </div>
+        )}
 
-        {/* Saved games section */}
-        <div className="mb-6">
-          <H1 className="mb-6 text-violet-600">Saved games</H1>
-
-          {/* Filter Chips - Solo se muestran si hay games */}
-          {hasGames && (
-            <FilterChips
-              activeFilter={activeFilter}
-              onFilterChange={handleFilterChange}
-              className="mb-6"
-            />
-          )}
-
-          {/* Content: Empty state o games list */}
-          {hasGames ? (
-            <GamesGrid onDeleteGame={handleDeleteGame} />
-          ) : (
-            <EmptyState
-              title="Nothing collected yet"
-              description="Here you will see your collected games"
-            />
-          )}
-        </div>
+        {/* Content: Empty state o games list */}
+        {hasGames ? (
+          <GamesGrid
+            onDeleteGame={handleDeleteGame}
+            onGameClick={onGameClick}
+          />
+        ) : (
+          <EmptyState
+            title="Nothing collected yet"
+            description="Here you will see your collected games"
+          />
+        )}
       </div>
     </div>
   );

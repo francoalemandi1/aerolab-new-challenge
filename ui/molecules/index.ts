@@ -2,10 +2,10 @@
 // Currently empty as providers have been moved to /providers
 
 // UI molecules exports
-export { Card, CardShowcase } from "./card";
 export * from "./app-header";
+export * from "./card";
 export * from "./empty-state";
 export * from "./filter-chips";
-export * from "./games-grid";
 export * from "./game-search";
+export * from "./games-grid";
 export * from "./media-carousel";

@@ -12,7 +12,6 @@ declare global {
 type UseLocalStorageOptions<T> = {
   serializer?: (value: T) => string;
   deserializer?: (value: string) => T;
-  initializeWithValue?: boolean;
 };
 
 const IS_SERVER = typeof window === "undefined";
@@ -25,9 +24,7 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T | (() => T),
   options: UseLocalStorageOptions<T> = {}
-): [T, Dispatch<SetStateAction<T>>, () => void] {
-  const { initializeWithValue = true } = options;
-
+): [T, Dispatch<SetStateAction<T>>, () => void, boolean] {
   const serializer = useCallback<(value: T) => string>(
     value => {
       if (options.serializer) {
@@ -81,12 +78,23 @@ export function useLocalStorage<T>(
     }
   }, [initialValue, key, deserializer]);
 
+  // Estado para manejar hidratación
+  const [isHydrated, setIsHydrated] = useState(false);
+
   const [storedValue, setStoredValue] = useState(() => {
-    if (initializeWithValue) {
-      return readValue();
-    }
-    return initialValue instanceof Function ? initialValue() : initialValue;
+    // En el servidor o durante la hidratación inicial, usar valor por defecto
+    const initialValueToUse =
+      initialValue instanceof Function ? initialValue() : initialValue;
+    return initialValueToUse;
   });
+
+  // Efecto para hidratar el valor real del localStorage después del mount
+  useEffect(() => {
+    if (!isHydrated) {
+      setStoredValue(readValue());
+      setIsHydrated(true);
+    }
+  }, [isHydrated, readValue]);
 
   const setValue: Dispatch<SetStateAction<T>> = useCallback(
     value => {
@@ -156,5 +164,5 @@ export function useLocalStorage<T>(
       window.removeEventListener("local-storage", handleStorageChange);
   }, [key, readValue]);
 
-  return [storedValue, setValue, removeValue];
+  return [storedValue, setValue, removeValue, isHydrated];
 }

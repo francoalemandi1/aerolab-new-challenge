@@ -4,6 +4,7 @@ export * from "./command";
 export * from "./default-image";
 export * from "./game-card";
 export * from "./input";
+export * from "./loading-spinner";
 export * from "./optimized-image";
 export * from "./search-input";
 export * from "./toast";

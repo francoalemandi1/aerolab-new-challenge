@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { H4, Body } from "@/ui/atoms";
@@ -29,6 +30,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           width={320}
           height={200}
           className="w-full max-w-sm object-contain"
+          priority
+          sizes="(max-width: 768px) 100vw, 320px"
+          style={{
+            width: "100%",
+            height: "auto",
+            maxWidth: "320px",
+          }}
         />
       </div>
 

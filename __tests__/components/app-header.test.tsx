@@ -37,7 +37,7 @@ describe("AppHeader", () => {
     render(<AppHeader title="Gaming Haven Z" />);
     const logo = screen.getByTestId("app-logo");
 
-    expect(logo).toHaveAttribute("src", "/gaming-haven-logo.svg");
+    expect(logo).toHaveAttribute("src", "/game-logo.svg");
     expect(logo).toHaveAttribute("alt", "Gaming Haven Z Logo");
   });
 

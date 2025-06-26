@@ -62,9 +62,9 @@ export const GameCard: React.FC<GameCardProps> = ({
         {/* Delete Button */}
         <button
           onClick={handleDelete}
-          className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
+          className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-lg backdrop-blur-sm transition-all hover:scale-110 hover:bg-white md:bottom-4 md:right-4 md:h-10 md:w-10"
         >
-          <Trash2 className="h-4 w-4 text-gray-dark" />
+          <Trash2 className="h-4 w-4 text-gray-dark md:h-5 md:w-5" />
         </button>
       </div>
     </div>

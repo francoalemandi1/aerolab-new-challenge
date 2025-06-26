@@ -105,13 +105,13 @@ export const GameSearch: React.FC<GameSearchProps> = ({
   return (
     <div className={cn("relative mb-6 w-full", className)}>
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200" />
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200 md:h-6 md:w-6" />
         {inputValue && (
           <button
             onClick={handleClearSearch}
-            className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200 transition-colors hover:text-pink-400"
+            className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200 transition-colors hover:text-pink-400 md:h-6 md:w-6"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 md:h-6 md:w-6" />
           </button>
         )}
         <input
@@ -124,6 +124,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
             "font-inter text-base placeholder:text-pink-200",
             "focus:outline-none focus-visible:outline-none",
             "disabled:cursor-not-allowed disabled:opacity-50",
+            "md:h-14 md:pl-14 md:pr-14 md:text-lg",
             isShowingResults
               ? "rounded-main rounded-b-none border-b-0"
               : "rounded-main"
@@ -135,10 +136,10 @@ export const GameSearch: React.FC<GameSearchProps> = ({
       {/* Dropdown Results */}
       {isShowingResults && (
         <div className="absolute left-0 right-0 top-full z-50 rounded-main rounded-t-none border border-t-0 border-pink-600/20 bg-gray-white shadow-lg">
-          <div className="max-h-60 overflow-y-auto">
+          <div className="max-h-60 overflow-y-auto md:max-h-80">
             {/* Título para sugerencias */}
             {showSuggestions && inputValue.trim().length === 0 && (
-              <div className="border-b border-pink-600/10 px-4 py-2 text-xs font-medium text-gray-500">
+              <div className="border-b border-pink-600/10 px-4 py-2 text-xs font-medium text-gray-500 md:px-6 md:py-3 md:text-sm">
                 Suggested games
               </div>
             )}
@@ -169,30 +170,30 @@ export const GameSearch: React.FC<GameSearchProps> = ({
                 <div
                   key={game.id}
                   onClick={() => handleGameSelect(game)}
-                  className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 hover:bg-pink-50"
+                  className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 hover:bg-pink-50 md:gap-4 md:px-6 md:py-4"
                 >
-                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 md:h-14 md:w-14">
                     <GameThumbnailImage
                       imageId={game.imageId || ""}
                       alt={game.title}
                       fill
                       className="object-cover"
-                      sizes="48px"
+                      sizes="(max-width: 768px) 48px, 56px"
                       retina={true}
                     />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-gray-900">
+                    <span className="block truncate text-sm font-medium text-gray-900 md:text-base">
                       {game.title}
                     </span>
                     {game.summary && (
-                      <span className="block truncate text-xs text-gray-500">
+                      <span className="block truncate text-xs text-gray-500 md:text-sm">
                         {game.summary.substring(0, 60)}...
                       </span>
                     )}
                   </div>
                   {isGameSaved(game.id) && (
-                    <Check className="h-4 w-4 flex-shrink-0 text-green-600" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-green-600 md:h-5 md:w-5" />
                   )}
                 </div>
               ))}

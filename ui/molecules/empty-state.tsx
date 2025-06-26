@@ -18,7 +18,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center space-y-6 px-8 py-16",
+        "flex flex-col items-center justify-center space-y-6 px-8 py-16 md:space-y-8 md:px-12 md:py-24",
         className
       )}
     >
@@ -41,9 +41,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
 
       {/* Text content */}
-      <div className="space-y-2 text-center">
+      <div className="space-y-2 text-center md:space-y-3">
         <H4 className="text-violet-600">{title}</H4>
-        <Body className="text-gray">{description}</Body>
+        <Body className="text-gray md:text-lg">{description}</Body>
       </div>
     </div>
   );

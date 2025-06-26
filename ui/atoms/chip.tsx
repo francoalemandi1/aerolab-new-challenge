@@ -17,9 +17,10 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           "font-inter text-h5-desktop font-medium",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600",
           "disabled:pointer-events-none disabled:opacity-50",
+          "md:py-2 md:text-base",
           isActive
-            ? "bg-violet-600 px-2.5 text-white"
-            : "bg-transparent px-1.5 text-violet-600 hover:bg-violet-50",
+            ? "bg-violet-600 px-2.5 text-white md:px-4"
+            : "bg-transparent px-1.5 text-violet-600 hover:bg-violet-50 md:px-3",
           className
         )}
         {...props}

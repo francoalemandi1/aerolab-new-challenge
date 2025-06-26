@@ -4,9 +4,9 @@ import {
   IGDBGame,
   IGDBGamesResponse,
   GameFromIGDB,
-  IGDBGenre,
   IGDBPlatform,
   IGDBScreenshot,
+  SimilarGame,
 } from "@/types/igdb";
 import { getOptimalImageUrl } from "./image-utils";
 
@@ -25,17 +25,6 @@ function transformIGDBGame(igdbGame: IGDBGame): GameFromIGDB {
       imageId = igdbGame.cover.image_id;
       imageUrl = getOptimalImageUrl(imageId, "card");
     }
-  }
-
-  // Extract genres
-  let genres: string[] = [];
-  if (igdbGame.genres && Array.isArray(igdbGame.genres)) {
-    genres = igdbGame.genres
-      .filter(
-        (genre): genre is IGDBGenre =>
-          typeof genre === "object" && genre !== null && "name" in genre
-      )
-      .map(genre => genre.name);
   }
 
   // Extract platforms
@@ -84,11 +73,11 @@ function transformIGDBGame(igdbGame: IGDBGame): GameFromIGDB {
     summary: igdbGame.summary,
     storyline: igdbGame.storyline,
     releaseDate,
-    genres,
     platforms,
     rating: igdbGame.total_rating,
     screenshots,
     screenshotIds,
+    // similarGames will be added separately in getGameByIdSSR
   };
 }
 
@@ -117,7 +106,7 @@ export async function searchGames(
     // Build the search body for IGDB API
     const searchBody = `
       search "${query}";
-      fields name, summary, cover.image_id, genres.name, platforms.name, first_release_date, total_rating;
+      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating;
       where category = 0;
       limit ${limit};
     `.trim();
@@ -168,7 +157,7 @@ export async function getPopularGames(
   try {
     // Build the query body for popular games
     const queryBody = `
-      fields name, summary, cover.image_id, genres.name, platforms.name, first_release_date, total_rating;
+      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating;
       where category = 0 & total_rating_count > 10;
       sort total_rating desc;
       limit ${limit};
@@ -220,7 +209,7 @@ export async function getGameByIdSSR(
   try {
     // Build the query body for specific game
     const queryBody = `
-      fields name, summary, cover.image_id, genres.name, platforms.name, first_release_date, total_rating, storyline, screenshots.image_id;
+      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating, storyline, screenshots.image_id, similar_games;
       where id = ${gameId};
     `.trim();
 
@@ -247,10 +236,30 @@ export async function getGameByIdSSR(
       return null;
     }
 
-    // Transform the data to our app format
-    const transformedGame = transformIGDBGame(igdbGames[0]);
+    const game = igdbGames[0];
 
-    return transformedGame;
+    // Transform the basic game data
+    const transformedGame = transformIGDBGame(game);
+
+    // Fetch similar games details if available
+    let similarGames: SimilarGame[] = [];
+    if (
+      game.similar_games &&
+      Array.isArray(game.similar_games) &&
+      game.similar_games.length > 0
+    ) {
+      // similar_games contains IDs as numbers
+      const similarGameIds = game.similar_games.filter(
+        id => typeof id === "number"
+      ) as number[];
+      similarGames = await getSimilarGamesDetails(similarGameIds);
+    }
+
+    // Return the complete game data with similar games
+    return {
+      ...transformedGame,
+      similarGames,
+    };
   } catch (error) {
     console.error("Error fetching game details:", error);
     throw new Error("Failed to fetch game details");
@@ -266,4 +275,74 @@ export async function getGameById(
   gameId: string
 ): Promise<GameFromIGDB | null> {
   return getGameByIdSSR(gameId);
+}
+
+/**
+ * Get similar games details by IDs
+ * @param gameIds - Array of IGDB game IDs
+ * @returns Promise with similar games data
+ */
+async function getSimilarGamesDetails(
+  gameIds: number[]
+): Promise<SimilarGame[]> {
+  if (!IGDB_CLIENT_ID || !IGDB_ACCESS_TOKEN || gameIds.length === 0) {
+    return [];
+  }
+
+  try {
+    // Build the query body for similar games
+    const queryBody = `
+      fields name, cover.image_id;
+      where id = (${gameIds.slice(0, 4).join(",")});
+      limit 4;
+    `.trim();
+
+    // Make the API call
+    const response = await fetch(IGDB_API_URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": IGDB_CLIENT_ID,
+        Authorization: `Bearer ${IGDB_ACCESS_TOKEN}`,
+        "Content-Type": "text/plain",
+      },
+      body: queryBody,
+    });
+
+    if (!response.ok) {
+      console.error(
+        "IGDB API error for similar games:",
+        response.status,
+        response.statusText
+      );
+      return [];
+    }
+
+    const similarGamesData: IGDBGamesResponse = await response.json();
+
+    // Transform the data to our SimilarGame format
+    return similarGamesData.map(game => {
+      let imageUrl = "";
+      let imageId: string | undefined;
+
+      if (
+        game.cover &&
+        typeof game.cover === "object" &&
+        "image_id" in game.cover
+      ) {
+        imageId = game.cover.image_id;
+        imageUrl = getOptimalImageUrl(imageId, "card");
+      }
+
+      return {
+        id: game.id.toString(),
+        title: game.name,
+        imageUrl: imageUrl || "/placeholder-game.jpg",
+        imageId,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching similar games:", error);
+    return [];
+  }
 }

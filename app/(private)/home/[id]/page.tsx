@@ -7,6 +7,7 @@ import { MediaCarousel } from "@/ui/molecules/media-carousel";
 import { GameSearch } from "@/ui/molecules";
 import { GameCollectionButton } from "@/ui/organisms";
 import { getGameByIdSSR } from "@/lib/igdb";
+import Image from "next/image";
 
 interface GameDetailPageProps {
   params: Promise<{ id: string }>;
@@ -197,28 +198,52 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
         </div>
       )}
 
-      {/* Genres */}
-      {gameData.genres && gameData.genres.length > 1 && (
-        <div className="mb-8">
-          <H2 className="mb-2 text-h2-mobile text-black">Genres</H2>
-          <div className="flex flex-wrap gap-2">
-            {gameData.genres.map(genre => (
-              <span
-                key={genre}
-                className="rounded-full bg-violet-100 px-3 py-1 text-sm text-violet-800"
-              >
-                {genre}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Screenshots */}
       {gameData.screenshotIds && gameData.screenshotIds.length > 0 && (
         <div className="mb-8">
-          <H2 className="mb-2 text-h2-mobile text-black">Screenshots</H2>
+          <H2 className="mb-2 text-h2-mobile text-black">Media</H2>
           <MediaCarousel imageIds={gameData.screenshotIds} />
+        </div>
+      )}
+
+      {/* Similar Games */}
+      {gameData.similarGames && gameData.similarGames.length > 0 && (
+        <div className="mb-8">
+          <H2 style={{ color: "#6727A6" }} className="mb-2 text-h2-mobile">
+            Similar games
+          </H2>
+          <div className="grid grid-cols-2 gap-4">
+            {gameData.similarGames.map(game => (
+              <Link
+                key={game.id}
+                href={`/home/${game.id}`}
+                className="group block"
+              >
+                <div className="relative mb-2 aspect-[3/4] overflow-hidden rounded-lg">
+                  {game.imageId ? (
+                    <GameDetailImage
+                      imageId={game.imageId}
+                      alt={game.title}
+                      fill
+                      className="object-cover transition-transform duration-200 group-hover:scale-105"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <Image
+                      src={game.imageUrl}
+                      alt={game.title}
+                      fill
+                      className="object-cover transition-transform duration-200 group-hover:scale-105"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  )}
+                </div>
+                <H3 className="text-sm font-medium text-gray-800 transition-colors group-hover:text-violet-600">
+                  {game.title}
+                </H3>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -32,13 +32,13 @@ export function GameCollectionButton({ gameData }: GameCollectionButtonProps) {
   return (
     <Button
       onClick={handleToggleCollection}
-      className={`w-full py-4 text-base font-medium transition-colors ${
+      className={`w-full py-4 text-base font-medium transition-colors focus:ring-0 focus:ring-offset-0 active:scale-[0.98] ${
         isInCollection
-          ? "bg-red-600 text-white hover:bg-red-700"
-          : "bg-violet-600 text-white hover:bg-violet-700"
+          ? "border-2 border-violet-600 bg-white text-violet-600 hover:bg-violet-50 focus:bg-white active:bg-white"
+          : "bg-violet-900 text-white hover:bg-violet-900/90 focus:bg-violet-900 active:bg-violet-900"
       }`}
     >
-      {isInCollection ? "Remove from collection" : "Add to collection"}
+      {isInCollection ? "Game collected" : "Collect game"}
     </Button>
   );
 }

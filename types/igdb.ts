@@ -197,6 +197,15 @@ export interface GameFromIGDB {
   rating?: number;
   screenshots?: string[];
   screenshotIds?: string[]; // Original IGDB screenshot IDs for dynamic sizing
+  similarGames?: SimilarGame[]; // Similar games data
+}
+
+// Interface for similar games
+export interface SimilarGame {
+  id: string;
+  title: string;
+  imageUrl: string;
+  imageId?: string;
 }
 
 // Search response type

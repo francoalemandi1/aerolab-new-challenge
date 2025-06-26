@@ -31,6 +31,7 @@ export const GamesGrid: React.FC<GamesGridProps> = ({ className }) => {
           id={game.id}
           title={game.title}
           imageUrl={game.imageUrl}
+          imageId={game.imageId}
           onDelete={handleDeleteGame}
           onClick={handleGameClick}
         />

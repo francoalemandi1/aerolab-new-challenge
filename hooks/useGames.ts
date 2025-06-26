@@ -7,6 +7,7 @@ export interface Game {
   id: string;
   title: string;
   imageUrl: string;
+  imageId?: string; // IGDB image ID for optimized images
   addedAt?: string;
 }
 

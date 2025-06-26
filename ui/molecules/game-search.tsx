@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Search, Check, Loader2 } from "lucide-react";
+import { Search, Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGames } from "@/hooks/useGames";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGamesSearch } from "@/hooks/useGamesSearch";
+import { useQuery } from "@tanstack/react-query";
+import { getPopularGames } from "@/lib/igdb";
 import { GameThumbnailImage } from "@/ui/atoms";
 import { GameFromIGDB } from "@/types/igdb";
 
@@ -21,6 +23,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Hooks
   const router = useRouter();
@@ -36,57 +39,111 @@ export const GameSearch: React.FC<GameSearchProps> = ({
     error,
   } = useGamesSearch(debouncedSearchTerm, 8);
 
+  // React Query para juegos populares (sugerencias)
+  const { data: popularGames = [], isLoading: isLoadingPopular } = useQuery({
+    queryKey: ["popular-games-suggestions"],
+    queryFn: () => getPopularGames(10), // Máximo 10 sugerencias
+    staleTime: 1000 * 60 * 5, // 5 minutos
+  });
+
   // Manejar apertura/cierre del dropdown
   React.useEffect(() => {
-    if (debouncedSearchTerm.trim().length >= 2 && searchResults.length > 0) {
+    if (debouncedSearchTerm.trim().length >= 1) {
+      setOpen(true);
+      setShowSuggestions(false);
+    } else if (showSuggestions) {
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [debouncedSearchTerm, searchResults]);
+  }, [debouncedSearchTerm, showSuggestions]);
 
   const handleGameSelect = (igdbGame: GameFromIGDB) => {
-    // Navegar a la página de detalle del juego
-    router.push(`/home/${igdbGame.id}`);
+    // Navegar a la página de detalle del juego usando el slug oficial de IGDB
+    router.push(`/home/${igdbGame.slug}`);
 
     // Limpiar el input después de seleccionar
     setInputValue("");
     setOpen(false);
+    setShowSuggestions(false);
   };
+
+  const handleClearSearch = () => {
+    setInputValue("");
+    setOpen(false);
+    setShowSuggestions(false);
+  };
+
+  const handleInputFocus = () => {
+    if (inputValue.trim().length === 0) {
+      setShowSuggestions(true);
+      setOpen(true);
+    } else if (debouncedSearchTerm.trim().length >= 1) {
+      setOpen(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    // Delay para permitir clicks en los resultados
+    setTimeout(() => {
+      setOpen(false);
+      setShowSuggestions(false);
+    }, 200);
+  };
+
+  // Determinar qué resultados mostrar
+  const displayResults =
+    showSuggestions && inputValue.trim().length === 0
+      ? popularGames
+      : searchResults;
+
+  const isShowingResults =
+    open &&
+    ((showSuggestions && inputValue.trim().length === 0) ||
+      debouncedSearchTerm.trim().length >= 1);
 
   return (
     <div className={cn("relative mb-6 w-full", className)}>
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200" />
-        {isLoading && (
-          <Loader2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-pink-400" />
+        {inputValue && (
+          <button
+            onClick={handleClearSearch}
+            className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200 transition-colors hover:text-pink-400"
+          >
+            <X className="h-5 w-5" />
+          </button>
         )}
         <input
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
-          onFocus={() => {
-            if (searchResults.length > 0) setOpen(true);
-          }}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           className={cn(
-            "flex h-12 w-full border border-pink-600/20 bg-gray-white py-4 pl-12",
-            isLoading ? "pr-12" : "pr-4",
+            "flex h-12 w-full border border-pink-600/20 bg-gray-white py-4 pl-12 pr-12",
             "font-inter text-base placeholder:text-pink-200",
             "focus:outline-none focus-visible:outline-none",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            open && (searchResults.length > 0 || error)
+            isShowingResults
               ? "rounded-main rounded-b-none border-b-0"
               : "rounded-main"
           )}
           placeholder={placeholder}
-          disabled={isLoading}
         />
       </div>
 
       {/* Dropdown Results */}
-      {open && (
+      {isShowingResults && (
         <div className="absolute left-0 right-0 top-full z-50 rounded-main rounded-t-none border border-t-0 border-pink-600/20 bg-gray-white shadow-lg">
           <div className="max-h-60 overflow-y-auto">
-            {error && (
+            {/* Título para sugerencias */}
+            {showSuggestions && inputValue.trim().length === 0 && (
+              <div className="border-b border-pink-600/10 px-4 py-2 text-xs font-medium text-gray-500">
+                Suggested games
+              </div>
+            )}
+
+            {error && !showSuggestions && (
               <div className="py-6 text-center text-sm text-red-500">
                 {error instanceof Error
                   ? error.message
@@ -94,9 +151,21 @@ export const GameSearch: React.FC<GameSearchProps> = ({
               </div>
             )}
 
+            {/* Mensaje para 1 carácter */}
             {!error &&
-              searchResults.length > 0 &&
-              searchResults.map(game => (
+              !showSuggestions &&
+              debouncedSearchTerm.trim().length === 1 && (
+                <div className="py-6 text-center text-sm text-gray-500">
+                  Type at least 2 characters to search...
+                </div>
+              )}
+
+            {/* Resultados de búsqueda o sugerencias */}
+            {!error &&
+              displayResults.length > 0 &&
+              ((showSuggestions && inputValue.trim().length === 0) ||
+                (!showSuggestions && debouncedSearchTerm.trim().length >= 2)) &&
+              displayResults.map(game => (
                 <div
                   key={game.id}
                   onClick={() => handleGameSelect(game)}
@@ -128,12 +197,33 @@ export const GameSearch: React.FC<GameSearchProps> = ({
                 </div>
               ))}
 
-            {!error &&
-              !isLoading &&
-              searchResults.length === 0 &&
-              debouncedSearchTerm.trim().length >= 2 && (
+            {/* Estado de carga para sugerencias */}
+            {showSuggestions &&
+              inputValue.trim().length === 0 &&
+              isLoadingPopular && (
                 <div className="py-6 text-center text-sm text-gray-500">
-                  No games found for &quot;{debouncedSearchTerm}&quot;.
+                  Loading suggestions...
+                </div>
+              )}
+
+            {/* Estado de carga para búsqueda */}
+            {!error &&
+              !showSuggestions &&
+              debouncedSearchTerm.trim().length >= 2 &&
+              isLoading && (
+                <div className="py-6 text-center text-sm text-gray-500">
+                  Searching...
+                </div>
+              )}
+
+            {/* Sin resultados */}
+            {!error &&
+              !showSuggestions &&
+              debouncedSearchTerm.trim().length >= 2 &&
+              !isLoading &&
+              searchResults.length === 0 && (
+                <div className="py-6 text-center text-sm text-gray-500">
+                  No games found. Try another search.
                 </div>
               )}
           </div>

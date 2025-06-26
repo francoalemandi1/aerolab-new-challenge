@@ -12,7 +12,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ title, className }) => {
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <Image
-        src="/gaming-haven-logo.svg"
+        src="/game-logo.svg"
         alt="Gaming Haven Z Logo"
         width={24}
         height={24}

@@ -187,23 +187,26 @@ export interface IGDBResponse<T> {
 export interface GameFromIGDB {
   id: string;
   title: string;
+  slug: string; // IGDB official slug
   imageUrl: string;
   imageId?: string; // Original IGDB image ID for dynamic sizing
   summary?: string;
   storyline?: string;
   releaseDate?: string;
+  first_release_date?: number; // Unix timestamp for filtering
   genres?: string[];
   platforms?: string[];
   rating?: number;
   screenshots?: string[];
   screenshotIds?: string[]; // Original IGDB screenshot IDs for dynamic sizing
-  similarGames?: SimilarGame[]; // Similar games data
+  similarGames?: SimilarGame[]; // Similar games with basic info
 }
 
 // Interface for similar games
 export interface SimilarGame {
   id: string;
   title: string;
+  slug: string; // IGDB official slug
   imageUrl: string;
   imageId?: string;
 }

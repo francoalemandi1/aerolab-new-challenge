@@ -20,5 +20,5 @@ export default async function HomePage() {
     redirect("/auth/signin");
   }
 
-  return <HomeClient hasGames={true} />;
+  return <HomeClient />;
 }

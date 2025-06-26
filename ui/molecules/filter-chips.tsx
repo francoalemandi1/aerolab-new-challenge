@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Chip } from "@/ui/atoms";
-
-export type FilterType = "last-added" | "newest" | "oldest";
+import { FilterType } from "@/hooks/useGames";
 
 interface FilterChipsProps {
   activeFilter: FilterType;

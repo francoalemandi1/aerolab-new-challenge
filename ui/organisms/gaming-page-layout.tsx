@@ -7,11 +7,10 @@ import {
   AppHeader,
   EmptyState,
   FilterChips,
-  FilterType,
   GamesGrid,
   GameSearch,
 } from "@/ui/molecules";
-import { useGames } from "@/hooks/useGames";
+import { useGames, FilterType } from "@/hooks/useGames";
 
 interface GamingPageLayoutProps {
   className?: string;
@@ -28,7 +27,6 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
-    // Aquí se implementará la lógica de filtrado más adelante
     console.log("Filter changed to:", filter);
   };
 
@@ -55,7 +53,7 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
 
         {/* Content: Empty state o games list */}
         {hasGames ? (
-          <GamesGrid />
+          <GamesGrid filter={activeFilter} />
         ) : (
           <EmptyState
             title="Nothing collected yet"

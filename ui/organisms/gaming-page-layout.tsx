@@ -11,38 +11,25 @@ import {
   GamesGrid,
   GameSearch,
 } from "@/ui/molecules";
+import { useGames } from "@/hooks/useGames";
 
 interface GamingPageLayoutProps {
   className?: string;
-  hasGames?: boolean; // Prop para controlar si hay games o no
-  onGameClick?: (gameId: string) => void;
 }
 
 export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
   className,
-  hasGames = false, // Por defecto false para mostrar empty state
-  onGameClick,
 }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("last-added");
+  const { savedGames } = useGames();
+
+  // Determinar si hay juegos guardados
+  const hasGames = savedGames.length > 0;
 
   const handleFilterChange = (filter: FilterType) => {
     setActiveFilter(filter);
     // Aquí se implementará la lógica de filtrado más adelante
     console.log("Filter changed to:", filter);
-  };
-
-  const handleDeleteGame = (gameId: string) => {
-    console.log("Deleting game:", gameId);
-    // Aquí se implementará la lógica de eliminación más adelante
-  };
-
-  const handleGameSelect = (game: {
-    id: string;
-    title: string;
-    imageUrl: string;
-  }) => {
-    console.log("Game selected:", game);
-    // Aquí se implementará la lógica para agregar el juego a la colección
   };
 
   return (
@@ -51,12 +38,7 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
       <AppHeader title="Gaming Haven Z" className="mb-8" />
 
       {/* Search */}
-      <div className="mb-8">
-        <GameSearch
-          placeholder="Search games..."
-          onGameSelect={handleGameSelect}
-        />
-      </div>
+      <GameSearch placeholder="Search games..." />
 
       {/* Saved games section */}
       <div className="mb-6">
@@ -73,10 +55,7 @@ export const GamingPageLayout: React.FC<GamingPageLayoutProps> = ({
 
         {/* Content: Empty state o games list */}
         {hasGames ? (
-          <GamesGrid
-            onDeleteGame={handleDeleteGame}
-            onGameClick={onGameClick}
-          />
+          <GamesGrid />
         ) : (
           <EmptyState
             title="Nothing collected yet"

@@ -23,10 +23,8 @@ const STORAGE_KEY = "gaming-haven-saved-games";
  * Utiliza useLocalStorage para persistir los datos
  */
 export function useGames() {
-  const [savedGames, setSavedGames, removeSavedGames] = useLocalStorage<Game[]>(
-    STORAGE_KEY,
-    []
-  );
+  const [savedGames, setSavedGames, removeSavedGames, isHydrated] =
+    useLocalStorage<Game[]>(STORAGE_KEY, []);
 
   const addGame = useCallback(
     (game: Omit<Game, "addedAt">) => {
@@ -106,6 +104,7 @@ export function useGames() {
     isGameSaved,
     clearAllGames,
     getFilteredGames,
+    isHydrated,
     isLoading: false, // Ya no necesitamos loading state con el nuevo patrón
   };
 }

@@ -14,7 +14,18 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  ...storybook.configs["flat/recommended"]
+  ...storybook.configs["flat/recommended"],
+  {
+    files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    rules: {
+      "storybook/no-uninstalled-addons": "off",
+      "storybook/use-storybook-testing-library": "off",
+      "@typescript-eslint/no-restricted-imports": "off",
+      // Disable the rule that prevents importing from @storybook/react
+      "@typescript-eslint/no-restricted-imports": "off",
+      "import/no-restricted-paths": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

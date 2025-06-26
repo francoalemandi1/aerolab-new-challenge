@@ -3,29 +3,36 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { GameCard } from "@/ui/atoms";
-import { useGames } from "@/hooks/useGames";
+import { useGames, FilterType } from "@/hooks/useGames";
 import { useRouter } from "next/navigation";
 
 interface GamesGridProps {
   className?: string;
+  filter?: FilterType;
 }
 
-export const GamesGrid: React.FC<GamesGridProps> = ({ className }) => {
-  const { savedGames, removeGame } = useGames();
+export const GamesGrid: React.FC<GamesGridProps> = ({
+  className,
+  filter = "last-added",
+}) => {
+  const { getFilteredGames, removeGame } = useGames();
   const router = useRouter();
+
+  // Obtener juegos filtrados según el filtro activo
+  const filteredGames = getFilteredGames(filter);
 
   const handleDeleteGame = (id: string) => {
     removeGame(id);
     console.log("Game removed from collection:", id);
   };
 
-  const handleGameClick = (id: string) => {
-    router.push(`/home/${id}`);
+  const handleGameClick = (gameSlug: string) => {
+    router.push(`/home/${gameSlug}`);
   };
 
   return (
     <div className={cn("grid grid-cols-2 gap-4", className)}>
-      {savedGames.map(game => (
+      {filteredGames.map(game => (
         <GameCard
           key={game.id}
           id={game.id}
@@ -33,7 +40,7 @@ export const GamesGrid: React.FC<GamesGridProps> = ({ className }) => {
           imageUrl={game.imageUrl}
           imageId={game.imageId}
           onDelete={handleDeleteGame}
-          onClick={handleGameClick}
+          onClick={() => handleGameClick(game.slug)}
         />
       ))}
     </div>

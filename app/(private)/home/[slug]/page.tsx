@@ -6,21 +6,21 @@ import { H1, H2, H3, GameDetailImage } from "@/ui/atoms";
 import { MediaCarousel } from "@/ui/molecules/media-carousel";
 import { GameSearch } from "@/ui/molecules";
 import { GameCollectionButton } from "@/ui/organisms";
-import { getGameByIdSSR } from "@/lib/igdb";
+import { getGameBySlugSSR } from "@/lib/igdb";
 import Image from "next/image";
 
 interface GameDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: GameDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { slug } = await params;
 
   try {
-    const gameData = await getGameByIdSSR(id);
+    const gameData = await getGameBySlugSSR(slug);
 
     if (!gameData) {
       return {
@@ -60,14 +60,10 @@ export async function generateMetadata({
 }
 
 export default async function GameDetailPage({ params }: GameDetailPageProps) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  if (!id) {
-    notFound();
-  }
-
-  // Server-side data fetching
-  const gameData = await getGameByIdSSR(id);
+  // Server-side data fetching using IGDB slug
+  const gameData = await getGameBySlugSSR(slug);
 
   if (!gameData) {
     notFound();
@@ -216,7 +212,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
             {gameData.similarGames.map(game => (
               <Link
                 key={game.id}
-                href={`/home/${game.id}`}
+                href={`/home/${game.slug}`}
                 className="group block"
               >
                 <div className="relative mb-2 aspect-[3/4] overflow-hidden rounded-lg">
@@ -238,9 +234,6 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
                     />
                   )}
                 </div>
-                <H3 className="text-sm font-medium text-gray-800 transition-colors group-hover:text-violet-600">
-                  {game.title}
-                </H3>
               </Link>
             ))}
           </div>

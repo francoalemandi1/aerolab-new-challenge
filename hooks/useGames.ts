@@ -6,10 +6,15 @@ import { useLocalStorage } from "./useLocalStorage";
 export interface Game {
   id: string;
   title: string;
+  slug: string; // IGDB official slug
   imageUrl: string;
   imageId?: string; // IGDB image ID for optimized images
   addedAt?: string;
+  releaseDate?: string; // Human readable release date
+  first_release_date?: number; // Unix timestamp from IGDB
 }
+
+export type FilterType = "last-added" | "newest" | "oldest";
 
 const STORAGE_KEY = "gaming-haven-saved-games";
 
@@ -60,12 +65,47 @@ export function useGames() {
     removeSavedGames();
   }, [removeSavedGames]);
 
+  // Función para filtrar y ordenar juegos
+  const getFilteredGames = useCallback(
+    (filter: FilterType): Game[] => {
+      const games = [...savedGames];
+
+      switch (filter) {
+        case "last-added":
+          return games.sort((a, b) => {
+            const dateA = new Date(a.addedAt || 0).getTime();
+            const dateB = new Date(b.addedAt || 0).getTime();
+            return dateB - dateA; // Más reciente primero
+          });
+
+        case "newest":
+          return games.sort((a, b) => {
+            const dateA = a.first_release_date || 0;
+            const dateB = b.first_release_date || 0;
+            return dateB - dateA; // Más nuevo primero
+          });
+
+        case "oldest":
+          return games.sort((a, b) => {
+            const dateA = a.first_release_date || Number.MAX_SAFE_INTEGER;
+            const dateB = b.first_release_date || Number.MAX_SAFE_INTEGER;
+            return dateA - dateB; // Más viejo primero
+          });
+
+        default:
+          return games;
+      }
+    },
+    [savedGames]
+  );
+
   return {
     savedGames,
     addGame,
     removeGame,
     isGameSaved,
     clearAllGames,
+    getFilteredGames,
     isLoading: false, // Ya no necesitamos loading state con el nuevo patrón
   };
 }

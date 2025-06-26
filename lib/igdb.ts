@@ -68,11 +68,13 @@ function transformIGDBGame(igdbGame: IGDBGame): GameFromIGDB {
   return {
     id: igdbGame.id.toString(),
     title: igdbGame.name,
+    slug: igdbGame.slug,
     imageUrl: imageUrl || "/placeholder-game.jpg", // Fallback image
     imageId,
     summary: igdbGame.summary,
     storyline: igdbGame.storyline,
     releaseDate,
+    first_release_date: igdbGame.first_release_date, // Unix timestamp for filtering
     platforms,
     rating: igdbGame.total_rating,
     screenshots,
@@ -106,7 +108,7 @@ export async function searchGames(
     // Build the search body for IGDB API
     const searchBody = `
       search "${query}";
-      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating;
+      fields name, slug, summary, cover.image_id, platforms.name, first_release_date, total_rating;
       where category = 0;
       limit ${limit};
     `.trim();
@@ -157,7 +159,7 @@ export async function getPopularGames(
   try {
     // Build the query body for popular games
     const queryBody = `
-      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating;
+      fields name, slug, summary, cover.image_id, platforms.name, first_release_date, total_rating;
       where category = 0 & total_rating_count > 10;
       sort total_rating desc;
       limit ${limit};
@@ -209,7 +211,7 @@ export async function getGameByIdSSR(
   try {
     // Build the query body for specific game
     const queryBody = `
-      fields name, summary, cover.image_id, platforms.name, first_release_date, total_rating, storyline, screenshots.image_id, similar_games;
+      fields name, slug, summary, cover.image_id, platforms.name, first_release_date, total_rating, storyline, screenshots.image_id, similar_games;
       where id = ${gameId};
     `.trim();
 
@@ -292,7 +294,7 @@ async function getSimilarGamesDetails(
   try {
     // Build the query body for similar games
     const queryBody = `
-      fields name, cover.image_id;
+      fields name, slug, cover.image_id;
       where id = (${gameIds.slice(0, 4).join(",")});
       limit 4;
     `.trim();
@@ -337,6 +339,7 @@ async function getSimilarGamesDetails(
       return {
         id: game.id.toString(),
         title: game.name,
+        slug: game.slug,
         imageUrl: imageUrl || "/placeholder-game.jpg",
         imageId,
       };
@@ -344,5 +347,79 @@ async function getSimilarGamesDetails(
   } catch (error) {
     console.error("Error fetching similar games:", error);
     return [];
+  }
+}
+
+/**
+ * Get game details by slug (IGDB official slug)
+ * @param gameSlug - IGDB game slug
+ * @returns Promise with game details
+ */
+export async function getGameBySlugSSR(
+  gameSlug: string
+): Promise<GameFromIGDB | null> {
+  // Validate environment variables
+  if (!IGDB_CLIENT_ID || !IGDB_ACCESS_TOKEN) {
+    console.error("IGDB API credentials not configured");
+    throw new Error("IGDB API credentials not configured");
+  }
+
+  try {
+    // Build the query body for specific game by slug
+    const queryBody = `
+      fields name, slug, summary, cover.image_id, platforms.name, first_release_date, total_rating, storyline, screenshots.image_id, similar_games;
+      where slug = "${gameSlug}";
+    `.trim();
+
+    // Make the API call
+    const response = await fetch(IGDB_API_URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": IGDB_CLIENT_ID,
+        Authorization: `Bearer ${IGDB_ACCESS_TOKEN}`,
+        "Content-Type": "text/plain",
+      },
+      body: queryBody,
+    });
+
+    if (!response.ok) {
+      console.error("IGDB API error:", response.status, response.statusText);
+      throw new Error(`IGDB API error: ${response.status}`);
+    }
+
+    const igdbGames: IGDBGamesResponse = await response.json();
+
+    if (igdbGames.length === 0) {
+      return null;
+    }
+
+    const game = igdbGames[0];
+
+    // Transform the basic game data
+    const transformedGame = transformIGDBGame(game);
+
+    // Fetch similar games details if available
+    let similarGames: SimilarGame[] = [];
+    if (
+      game.similar_games &&
+      Array.isArray(game.similar_games) &&
+      game.similar_games.length > 0
+    ) {
+      // similar_games contains IDs as numbers
+      const similarGameIds = game.similar_games.filter(
+        id => typeof id === "number"
+      ) as number[];
+      similarGames = await getSimilarGamesDetails(similarGameIds);
+    }
+
+    // Return the complete game data with similar games
+    return {
+      ...transformedGame,
+      similarGames,
+    };
+  } catch (error) {
+    console.error("Error fetching game details by slug:", error);
+    throw new Error("Failed to fetch game details by slug");
   }
 }

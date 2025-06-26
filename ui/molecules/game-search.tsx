@@ -2,24 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/ui/atoms/command";
+import { Search, Check } from "lucide-react";
 import Image from "next/image";
-
-interface Game {
-  id: string;
-  title: string;
-  imageUrl: string;
-}
+import { useGames, type Game } from "@/hooks/useGames";
 
 interface GameSearchProps {
-  onGameSelect?: (game: Game) => void;
   placeholder?: string;
   className?: string;
 }
@@ -56,16 +43,48 @@ const mockGames: Game[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=60&h=60&fit=crop",
   },
+  {
+    id: "6",
+    title: "Grand Theft Auto Vice City",
+    imageUrl:
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=60&h=60&fit=crop",
+  },
+  {
+    id: "7",
+    title: "Grand Theft Auto: Episodes from Liberty City",
+    imageUrl:
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=60&h=60&fit=crop",
+  },
+  {
+    id: "8",
+    title: "Grand Theft Auto: The Trilogy",
+    imageUrl:
+      "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=60&h=60&fit=crop",
+  },
+  {
+    id: "9",
+    title: "Grand Theft Auto Online",
+    imageUrl:
+      "https://images.unsplash.com/photo-1574891164043-eec9ebfe8b6a?w=60&h=60&fit=crop",
+  },
+  {
+    id: "10",
+    title: "Grand Theft Auto: Chinatown Wars",
+    imageUrl:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=60&h=60&fit=crop",
+  },
 ];
 
 export const GameSearch: React.FC<GameSearchProps> = ({
-  onGameSelect,
   placeholder = "Search games...",
   className,
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
+
+  // Hook para manejar los juegos guardados
+  const { addGame, isGameSaved } = useGames();
 
   // Filtrar juegos basado en el input
   useEffect(() => {
@@ -82,13 +101,21 @@ export const GameSearch: React.FC<GameSearchProps> = ({
   }, [inputValue]);
 
   const handleGameSelect = (game: Game) => {
-    setInputValue(game.title);
+    const success = addGame(game);
+    if (success) {
+      console.log(`Game "${game.title}" added to collection!`);
+      // Opcional: mostrar un toast o notificación
+    } else {
+      console.log(`Game "${game.title}" is already in your collection.`);
+    }
+
+    // Limpiar el input después de seleccionar
+    setInputValue("");
     setOpen(false);
-    onGameSelect?.(game);
   };
 
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn("relative mb-6 w-full", className)}>
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200" />
         <input
@@ -113,36 +140,36 @@ export const GameSearch: React.FC<GameSearchProps> = ({
       {/* Dropdown Results */}
       {open && filteredGames.length > 0 && (
         <div className="absolute left-0 right-0 top-full z-50 rounded-main rounded-t-none border border-t-0 border-pink-600/20 bg-gray-white shadow-lg">
-          <Command className="rounded-main rounded-t-none border-0 bg-transparent">
-            <CommandList className="max-h-60">
-              <CommandGroup>
-                {filteredGames.map(game => (
-                  <CommandItem
-                    key={game.id}
-                    value={game.title}
-                    onSelect={() => handleGameSelect(game)}
-                    className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 opacity-100 hover:bg-pink-50 aria-selected:bg-pink-50 data-[selected=true]:bg-pink-50"
-                  >
-                    <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
-                      <Image
-                        src={game.imageUrl}
-                        alt={game.title}
-                        fill
-                        className="object-cover"
-                        sizes="48px"
-                      />
-                    </div>
-                    <span className="flex-1 text-sm font-medium text-gray-900">
-                      {game.title}
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-              {filteredGames.length === 0 && inputValue && (
-                <CommandEmpty>No games found.</CommandEmpty>
-              )}
-            </CommandList>
-          </Command>
+          <div className="max-h-60 overflow-y-auto">
+            {filteredGames.map(game => (
+              <div
+                key={game.id}
+                onClick={() => handleGameSelect(game)}
+                className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 hover:bg-pink-50"
+              >
+                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
+                  <Image
+                    src={game.imageUrl}
+                    alt={game.title}
+                    fill
+                    className="object-cover"
+                    sizes="48px"
+                  />
+                </div>
+                <span className="flex-1 text-sm font-medium text-gray-900">
+                  {game.title}
+                </span>
+                {isGameSaved(game.id) && (
+                  <Check className="h-4 w-4 text-green-600" />
+                )}
+              </div>
+            ))}
+            {filteredGames.length === 0 && inputValue && (
+              <div className="py-6 text-center text-sm text-gray-500">
+                No games found.
+              </div>
+            )}
+          </div>
         </div>
       )}
 

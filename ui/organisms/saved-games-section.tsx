@@ -26,7 +26,9 @@ export const SavedGamesSection: React.FC<SavedGamesSectionProps> = ({
   if (!isHydrated) {
     return (
       <div className={className}>
-        <H1 className="mb-6 text-violet-600">Saved games</H1>
+        <H1 className="mb-6 text-violet-600 md:mb-8 md:text-center">
+          Saved games
+        </H1>
         <div className="flex items-center justify-center py-12">
           <LoadingSpinner size="lg" text="Loading your games..." />
         </div>
@@ -36,26 +38,30 @@ export const SavedGamesSection: React.FC<SavedGamesSectionProps> = ({
 
   return (
     <div className={className}>
-      <H1 className="mb-6 text-violet-600">Saved games</H1>
+      <H1 className="mb-6 text-violet-600 md:mb-8 md:text-center">
+        Saved games
+      </H1>
 
       {/* Filter Chips - Solo se muestran si hay games */}
       {hasGames && (
         <FilterChips
           activeFilter={activeFilter}
           onFilterChange={handleFilterChange}
-          className="mb-6"
+          className="mb-6 md:mb-8"
         />
       )}
 
       {/* Content: Empty state o games list */}
-      {hasGames ? (
-        <GamesGrid filter={activeFilter} />
-      ) : (
-        <EmptyState
-          title="Nothing collected yet"
-          description="Here you will see your collected games"
-        />
-      )}
+      <div className="md:mx-auto md:max-w-4xl">
+        {hasGames ? (
+          <GamesGrid filter={activeFilter} />
+        ) : (
+          <EmptyState
+            title="Nothing collected yet"
+            description="Here you will see your collected games"
+          />
+        )}
+      </div>
     </div>
   );
 };

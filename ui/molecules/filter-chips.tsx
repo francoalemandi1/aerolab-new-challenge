@@ -41,7 +41,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
       <div
         data-testid="normal-chips"
         className={cn(
-          "flex flex-wrap justify-start gap-2 transition-opacity duration-300",
+          "flex flex-wrap justify-start gap-2 transition-opacity duration-300 md:justify-center md:gap-3",
           isFixed ? "pointer-events-none opacity-0" : "opacity-100",
           className
         )}
@@ -61,13 +61,13 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
       <div
         data-testid="fixed-chips"
         className={cn(
-          "fixed left-1/2 top-4 z-50 -translate-x-1/2 rounded-full bg-white/90 p-1 shadow-lg backdrop-blur-sm transition-all duration-300",
+          "fixed left-1/2 top-4 z-50 -translate-x-1/2 rounded-full bg-white/90 p-1 shadow-lg backdrop-blur-sm transition-all duration-300 md:top-6 md:p-2",
           isFixed
             ? "translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-4 opacity-0"
         )}
       >
-        <div className="flex items-center justify-center gap-1.5 whitespace-nowrap">
+        <div className="flex items-center justify-center gap-1.5 whitespace-nowrap md:gap-2">
           {filterOptions.map(option => (
             <Chip
               key={`fixed-${option.key}`}

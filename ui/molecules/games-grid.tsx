@@ -31,7 +31,12 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
   };
 
   return (
-    <div className={cn("grid grid-cols-2 gap-4", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6",
+        className
+      )}
+    >
       {filteredGames.map(game => (
         <GameCard
           key={game.id}

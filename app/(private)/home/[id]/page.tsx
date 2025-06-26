@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Star, Calendar, Gamepad2 } from "lucide-react";
 import { H1, H2, H3, Button } from "@/ui/atoms";
 import { MediaCarousel } from "@/ui/molecules/media-carousel";
+import { GameSearch } from "@/ui/molecules";
 
 // Mock data - later will be replaced with API call
 const mockGameData = {
@@ -97,6 +98,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
         <H2 className="text-violet-600">Back</H2>
       </Link>
 
+      <GameSearch />
       {/* Game Header */}
       <div className="mb-8 flex flex-col gap-6">
         {/* Game Cover and Basic Info */}

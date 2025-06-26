@@ -23,6 +23,7 @@ export function OptimizedImage({
     <Image
       src={src}
       alt={alt}
+      sizes="(max-width: 768px) 50vw, 25vw"
       onError={e => {
         const target = e.target as HTMLImageElement;
         if (target.src !== fallback) {

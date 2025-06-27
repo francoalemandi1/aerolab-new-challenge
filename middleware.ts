@@ -48,7 +48,11 @@ export async function middleware(request: NextRequest) {
       "/auth/callback",
       "/auth/callback-result",
     ];
-    if (publicRoutes.includes(pathname)) {
+
+    // Allow public access to individual game pages
+    const isGameDetailPage = /^\/games\/[^\/]+$/.test(pathname);
+
+    if (publicRoutes.includes(pathname) || isGameDetailPage) {
       return NextResponse.next();
     }
 

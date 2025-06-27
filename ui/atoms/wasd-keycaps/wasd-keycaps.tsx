@@ -23,6 +23,8 @@ export const WasdKeycaps: React.FC<WasdKeycapsProps> = ({ className }) => {
             animationDelay: "0.5s",
             animationFillMode: "both",
           }}
+          priority
+          sizes="191px"
         />
       </div>
 
@@ -38,6 +40,8 @@ export const WasdKeycaps: React.FC<WasdKeycapsProps> = ({ className }) => {
             animationDelay: "0.5s",
             animationFillMode: "both",
           }}
+          priority
+          sizes="100vw"
         />
       </div>
     </div>

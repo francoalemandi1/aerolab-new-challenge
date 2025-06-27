@@ -15,15 +15,19 @@ export function OptimizedImage({
   retina = false,
   fallback = "/placeholder-game.jpg",
   alt,
+  sizes,
   ...props
 }: OptimizedImageProps) {
   const src = imageId ? getOptimalImageUrl(imageId, context, retina) : fallback;
+
+  // Dynamic sizes based on context if not provided
+  const contextSizes = sizes || getContextSizes(context);
 
   return (
     <Image
       src={src}
       alt={alt}
-      sizes="(max-width: 768px) 50vw, 25vw"
+      sizes={contextSizes}
       onError={e => {
         const target = e.target as HTMLImageElement;
         if (target.src !== fallback) {
@@ -33,6 +37,26 @@ export function OptimizedImage({
       {...props}
     />
   );
+}
+
+// Helper function to get optimal sizes for each context
+function getContextSizes(context: OptimizedImageProps["context"]): string {
+  switch (context) {
+    case "card":
+      return "(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw";
+    case "detail":
+      return "(max-width: 768px) 96px, 128px";
+    case "thumbnail":
+      return "(max-width: 768px) 64px, 80px";
+    case "hero":
+      return "(max-width: 768px) 100vw, 50vw";
+    case "screenshot":
+      return "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw";
+    case "carousel":
+      return "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw";
+    default:
+      return "(max-width: 768px) 50vw, 25vw";
+  }
 }
 
 // Specialized components for common use cases

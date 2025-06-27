@@ -32,6 +32,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               height={20}
               className="h-5 w-5 shrink-0 md:h-6 md:w-6"
               style={{ maxWidth: "100%", height: "auto" }}
+              priority
             />
           </div>
         </div>

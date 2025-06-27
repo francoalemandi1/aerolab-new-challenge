@@ -55,7 +55,7 @@ export const GameCard: React.FC<GameCardProps> = ({
             src={imageUrl}
             alt={title}
             fill
-            sizes="(max-width: 768px) 50vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             data-testid="game-image"
           />

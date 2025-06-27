@@ -6,7 +6,7 @@ import {
   H3,
   H4,
   H5,
-  Body,
+  Paragraph,
   Caption,
   GradientText,
 } from "@/ui/atoms/typography";
@@ -139,14 +139,14 @@ describe("Typography Components", () => {
     });
   });
 
-  describe("Body", () => {
+  describe("Paragraph", () => {
     it("renders with correct text", () => {
-      render(<Body>Test body text</Body>);
+      render(<Paragraph>Test body text</Paragraph>);
       expect(screen.getByText("Test body text")).toBeInTheDocument();
     });
 
     it("has correct default styles", () => {
-      render(<Body>Test</Body>);
+      render(<Paragraph>Test</Paragraph>);
       const bodyText = screen.getByText("Test");
       expect(bodyText).toHaveClass(
         "font-inter",
@@ -157,14 +157,14 @@ describe("Typography Components", () => {
     });
 
     it("renders as p element by default", () => {
-      render(<Body>Test</Body>);
+      render(<Paragraph>Test</Paragraph>);
       expect(screen.getByText("Test").tagName).toBe("P");
     });
 
     it("handles long text content correctly", () => {
       const longText =
         "This is a very long text that should wrap properly and maintain good readability with the appropriate line height and spacing.";
-      render(<Body>{longText}</Body>);
+      render(<Paragraph>{longText}</Paragraph>);
       expect(screen.getByText(longText)).toBeInTheDocument();
     });
   });
@@ -215,10 +215,10 @@ describe("Typography Components", () => {
 
     it("can be used inline within other text", () => {
       render(
-        <Body>
+        <Paragraph>
           This is normal text with <GradientText>gradient text</GradientText>{" "}
           inline.
-        </Body>
+        </Paragraph>
       );
       expect(screen.getByText("gradient text")).toHaveClass(
         "bg-gradient-violet-text"
@@ -291,12 +291,12 @@ describe("Typography Components", () => {
         <article>
           <H1>Article Title</H1>
           <H2>Introduction</H2>
-          <Body>
+          <Paragraph>
             This is the introduction paragraph with some{" "}
             <GradientText>highlighted text</GradientText>.
-          </Body>
+          </Paragraph>
           <H3>Main Section</H3>
-          <Body>Main content goes here.</Body>
+          <Paragraph>Main content goes here.</Paragraph>
           <Caption>Published on January 1, 2024</Caption>
         </article>
       );

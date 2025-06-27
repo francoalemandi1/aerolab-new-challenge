@@ -3,6 +3,7 @@ export * from "./chip";
 export * from "./command";
 export * from "./default-image";
 export * from "./game-card";
+export * from "./game-stat-chip";
 export * from "./input";
 export * from "./loading-spinner";
 export * from "./optimized-image";

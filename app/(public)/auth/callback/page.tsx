@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { RefreshCw } from "lucide-react";
+import { WasdKeycaps } from "@/ui/atoms";
 
 export default function AuthCallbackPage() {
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function AuthCallbackPage() {
           className="absolute inset-0 md:hidden"
           style={{
             backgroundImage:
-              "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+              "url('/mobile-background.svg'), url('/mobile-background.svg')",
             backgroundSize: "100vw auto, 100vw auto",
             backgroundRepeat: "no-repeat, no-repeat",
             backgroundPosition: "top left, top 100vw",
@@ -36,7 +36,7 @@ export default function AuthCallbackPage() {
         <div
           className="absolute inset-0 hidden md:block"
           style={{
-            backgroundImage: "url('/desktop-home-bg.svg')",
+            backgroundImage: "url('/desktop-background.svg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "top center",
@@ -44,22 +44,14 @@ export default function AuthCallbackPage() {
         />
       </div>
 
+      {/* Animated WASD Keys - For mobile and desktop */}
+      <WasdKeycaps className="right-0 top-0 z-20" />
+
       {/* Content */}
-      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="space-y-6 rounded-secondary border border-gray-light bg-white/80 p-8 text-center backdrop-blur-sm">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600/10">
-                <RefreshCw className="h-8 w-8 animate-spin text-violet-600" />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-dark">
-                Processing Authentication...
-              </h2>
-              <p className="text-gray">
-                Please wait while we complete your sign in.
-              </p>
-            </div>
-          </div>
+      <div className="relative z-10 flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600"></div>
+          <p className="text-gray-600">Processing authentication...</p>
         </div>
       </div>
     </div>

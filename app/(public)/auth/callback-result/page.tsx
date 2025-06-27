@@ -6,6 +6,7 @@ import Link from "next/link";
 import { H1, H2, Body } from "@/ui/atoms/typography";
 import { Button } from "@/ui/atoms/button";
 import { Card } from "@/ui/molecules/card";
+import { WasdKeycaps } from "@/ui/atoms";
 import {
   CheckCircle,
   XCircle,
@@ -226,7 +227,7 @@ function AuthCallbackResultContent() {
           className="absolute inset-0 md:hidden"
           style={{
             backgroundImage:
-              "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+              "url('/mobile-background.svg'), url('/mobile-background.svg')",
             backgroundSize: "100vw auto, 100vw auto",
             backgroundRepeat: "no-repeat, no-repeat",
             backgroundPosition: "top left, top 100vw",
@@ -235,13 +236,16 @@ function AuthCallbackResultContent() {
         <div
           className="absolute inset-0 hidden md:block"
           style={{
-            backgroundImage: "url('/desktop-home-bg.svg')",
+            backgroundImage: "url('/desktop-background.svg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "top center",
           }}
         />
       </div>
+
+      {/* Animated WASD Keys - For mobile and desktop */}
+      <WasdKeycaps className="right-0 top-0 z-20" />
 
       {/* Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
@@ -268,7 +272,7 @@ export default function AuthCallbackResultPage() {
               className="absolute inset-0 md:hidden"
               style={{
                 backgroundImage:
-                  "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+                  "url('/mobile-background.svg'), url('/mobile-background.svg')",
                 backgroundSize: "100vw auto, 100vw auto",
                 backgroundRepeat: "no-repeat, no-repeat",
                 backgroundPosition: "top left, top 100vw",
@@ -277,7 +281,7 @@ export default function AuthCallbackResultPage() {
             <div
               className="absolute inset-0 hidden md:block"
               style={{
-                backgroundImage: "url('/desktop-home-bg.svg')",
+                backgroundImage: "url('/desktop-background.svg')",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "top center",

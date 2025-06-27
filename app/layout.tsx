@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
+import { ErrorProvider } from "@/providers/error-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -114,17 +115,37 @@ export default function RootLayout({
         />
         <link
           rel="preload"
-          href="/home-absolute-bg.svg"
+          href="/mobile-background.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+        <link
+          rel="preload"
+          href="/desktop-background.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+        <link
+          rel="preload"
+          href="/desktop-keys.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+        <link
+          rel="preload"
+          href="/mobile-keys.svg"
           as="image"
           type="image/svg+xml"
         />
       </head>
       <body className={inter.className}>
-        <QueryProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <main className="flex-1">{children}</main>
-          </div>
-        </QueryProvider>
+        <ErrorProvider>
+          <QueryProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <main className="flex-1">{children}</main>
+            </div>
+          </QueryProvider>
+        </ErrorProvider>
       </body>
     </html>
   );

@@ -112,8 +112,8 @@ export const H5: React.FC<TypographyProps> = ({
   );
 };
 
-// Body Text Component
-export const Body: React.FC<TypographyProps> = ({
+// Paragraph Text Component
+export const Paragraph: React.FC<TypographyProps> = ({
   children,
   className,
   ...props
@@ -184,10 +184,10 @@ export const TypographyShowcase: React.FC = () => {
           <H3>Heading 3 - Purple Text</H3>
           <H4>Heading 4 - Gray Text</H4>
           <H5>Heading 5 - Desktop Only</H5>
-          <Body>
-            This is body text using the Inter font family. It demonstrates the
-            regular text styling for paragraphs and general content.
-          </Body>
+          <Paragraph>
+            This is paragraph text using the Inter font family. It demonstrates
+            the regular text styling for paragraphs and general content.
+          </Paragraph>
           <Caption>This is caption text for smaller content</Caption>
           <p>
             You can also use <GradientText>gradient text</GradientText> inline

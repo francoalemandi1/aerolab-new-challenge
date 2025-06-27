@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { redirect } from "next/navigation";
-import { GamesClient } from "./games-client";
+import { AppHeader, GameSearch } from "@/ui/molecules";
+import { SavedGamesSection } from "@/ui/organisms";
 
 export const metadata: Metadata = {
   title: "Gaming Haven - Your Game Collection",
@@ -49,5 +50,20 @@ export default async function GamesPage() {
     redirect("/auth/signin");
   }
 
-  return <GamesClient />;
+  return (
+    <div className="px-6 py-8 md:px-12 md:py-16">
+      {/* Header - Server Component */}
+      <AppHeader
+        title="Gaming Haven Z"
+        className="mb-6 md:mb-8"
+        showMenu={true}
+      />
+
+      {/* Game Search - Client Component */}
+      <GameSearch className="mb-6 md:mb-8" />
+
+      {/* Saved games section - Client Component */}
+      <SavedGamesSection className="mb-6 mt-8 md:mt-20" />
+    </div>
+  );
 }

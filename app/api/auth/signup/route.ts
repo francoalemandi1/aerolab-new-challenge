@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       email: validatedData.email,
       password: validatedData.password,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: `${origin}/api/auth/callback`,
       },
     });
 

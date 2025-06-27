@@ -1,6 +1,14 @@
-// eslint-disable-next-line
 import type { Meta, StoryObj } from "@storybook/react";
-import { H1, H2, H3, H4, H5, Body, Caption, GradientText } from "./typography";
+import {
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  Paragraph,
+  Caption,
+  GradientText,
+} from "./typography";
 
 // H1 Stories
 const H1Meta: Meta<typeof H1> = {
@@ -102,17 +110,17 @@ export const H5Default: StoryObj<typeof H5> = {
   },
 };
 
-// Body Stories
-export const BodyMeta: Meta<typeof Body> = {
-  title: "Design System/Typography/Body",
-  component: Body,
+// Paragraph Stories
+export const ParagraphMeta: Meta<typeof Paragraph> = {
+  title: "Design System/Typography/Paragraph",
+  component: Paragraph,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
 };
 
-export const BodyDefault: StoryObj<typeof Body> = {
+export const ParagraphDefault: StoryObj<typeof Paragraph> = {
   args: {
     children:
       "Este es el texto del cuerpo principal. Utiliza la fuente Inter con un peso normal y está optimizado para la lectura en párrafos largos. Mantiene un line-height apropiado para una excelente legibilidad.",

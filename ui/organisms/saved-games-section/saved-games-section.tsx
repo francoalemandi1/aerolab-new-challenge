@@ -42,13 +42,13 @@ export const SavedGamesSection: React.FC<SavedGamesSectionProps> = ({
       </H1>
 
       {/* Filter Chips - Solo se muestran si hay games */}
-      {hasGames && (
+      {hasGames ? (
         <FilterChips
           activeFilter={activeFilter}
           onFilterChange={handleFilterChange}
           className="mb-6 md:mb-8"
         />
-      )}
+      ) : null}
 
       {/* Content: Empty state o games list */}
       <div className="md:mx-auto md:max-w-4xl">

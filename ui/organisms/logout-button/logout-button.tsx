@@ -6,13 +6,6 @@ import { Button } from "@/ui/atoms/button";
 import { LogOut } from "lucide-react";
 
 interface LogoutButtonProps {
-  variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
   showIcon?: boolean;
@@ -20,8 +13,7 @@ interface LogoutButtonProps {
 }
 
 export function LogoutButton({
-  variant = "ghost",
-  size = "default",
+  size = "lg",
   className = "",
   showIcon = true,
   children = "Sign Out",
@@ -46,9 +38,9 @@ export function LogoutButton({
 
   return (
     <Button
-      variant={variant}
+      variant="ghost"
       size={size}
-      className={className}
+      className={`text-violet-600 hover:bg-transparent hover:text-violet-600 md:hover:bg-transparent md:hover:text-violet-600 ${className}`}
       onClick={handleSignOut}
       disabled={isLoading}
     >

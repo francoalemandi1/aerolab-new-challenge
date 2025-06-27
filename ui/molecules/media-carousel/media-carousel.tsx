@@ -3,6 +3,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { DefaultImage, GameCarouselImage } from "@/ui/atoms";
 
 interface MediaCarouselProps {
@@ -67,11 +68,13 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({
                     retina={true}
                   />
                 ) : (
-                  <img
+                  <Image
                     src={item}
                     alt={`Screenshot ${index + 1}`}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                     data-testid="carousel-image"
+                    sizes="112px"
                   />
                 )
               ) : (
@@ -82,7 +85,7 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({
         </div>
 
         {/* Navigation Arrows - positioned relative to carousel */}
-        {hasRealImages && displayItems.length > 1 && (
+        {hasRealImages && displayItems.length > 1 ? (
           <>
             <button
               onClick={goToPrevious}
@@ -101,7 +104,7 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({
               <ChevronRight className="h-4 w-4 text-gray-700" />
             </button>
           </>
-        )}
+        ) : null}
       </div>
     </div>
   );

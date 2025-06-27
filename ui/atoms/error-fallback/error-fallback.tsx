@@ -29,7 +29,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
 
       <p className="mb-4 max-w-md text-center text-gray-600">{userMessage}</p>
 
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === "development" ? (
         <details className="mb-4 w-full max-w-md text-sm">
           <summary className="cursor-pointer text-gray-500 hover:text-gray-700">
             Debug Info
@@ -46,14 +46,14 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             </div>
           </div>
         </details>
-      )}
+      ) : null}
 
       <div className="flex gap-3">
-        {resetError && (
+        {resetError ? (
           <Button onClick={resetError} variant="default" size="sm">
             Try Again
           </Button>
-        )}
+        ) : null}
 
         <Button
           onClick={() => window.location.reload()}
@@ -96,11 +96,11 @@ export const AuthErrorFallback: React.FC<ErrorFallbackProps> = ({
         Sign In
       </Button>
 
-      {resetError && (
+      {resetError ? (
         <Button onClick={resetError} variant="outline" size="sm">
           Try Again
         </Button>
-      )}
+      ) : null}
     </div>
   </div>
 );
@@ -146,10 +146,10 @@ export const GameErrorFallback: React.FC<{ resetError?: () => void }> = ({
     <p className="mb-3 max-w-sm text-center text-sm text-gray-500">
       Unable to load game data
     </p>
-    {resetError && (
+    {resetError ? (
       <Button onClick={resetError} variant="outline" size="sm">
         Retry
       </Button>
-    )}
+    ) : null}
   </div>
 );

@@ -1,23 +1,61 @@
-"use client";
-
-import { useEffect } from "react";
+import { createSupabaseServerClient } from "@/lib/supabase";
+import { H1 } from "@/ui/atoms/typography";
+import { Card } from "@/ui/molecules/card";
 import { WasdKeycaps } from "@/ui/atoms";
+import type { CallbackStatus } from "@/hooks/useCallbackStatus";
+import { CallbackStatus as CallbackStatusComponent } from "../_ui/organisms";
 
-export default function AuthCallbackPage() {
-  useEffect(() => {
-    // Create API URL for callback handling
-    const apiUrl = new URL("/api/auth/callback", window.location.origin);
+export default async function AuthCallbackPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  // Await searchParams in Next.js 15
+  const params = await searchParams;
 
-    // Pass through all query parameters to the API
-    const currentParams = new URLSearchParams(window.location.search);
-    currentParams.forEach((value, key) => {
-      apiUrl.searchParams.set(key, value);
-    });
+  const code = Array.isArray(params.code) ? params.code[0] : params.code;
+  const error = Array.isArray(params.error) ? params.error[0] : params.error;
+  const errorCode = Array.isArray(params.error_code)
+    ? params.error_code[0]
+    : params.error_code;
+  const success = Array.isArray(params.success)
+    ? params.success[0]
+    : params.success;
 
-    // Redirect to API callback handler which will handle the logic
-    // and then redirect to the appropriate result page
-    window.location.href = apiUrl.toString();
-  }, []);
+  let status: CallbackStatus = "error";
+
+  // If we have a success parameter, it means the API callback already handled the confirmation
+  if (success === "true") {
+    status = "success";
+  }
+  // If there's an error from the callback URL
+  else if (error || errorCode) {
+    status = "error";
+  }
+  // If we have a code, try to exchange it for a session
+  else if (code) {
+    const supabase = await createSupabaseServerClient();
+
+    try {
+      const { data, error: supabaseError } =
+        await supabase.auth.exchangeCodeForSession(code);
+
+      if (supabaseError) {
+        throw supabaseError;
+      }
+
+      if (data.user && data.session) {
+        status = "success";
+      } else {
+        status = "error";
+      }
+    } catch {
+      status = "error";
+    }
+  } else {
+    // No code found in callback
+    status = "error";
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-white">
@@ -48,10 +86,14 @@ export default function AuthCallbackPage() {
       <WasdKeycaps className="right-0 top-0 z-20" />
 
       {/* Content */}
-      <div className="relative z-10 flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600"></div>
-          <p className="text-gray-600">Processing authentication...</p>
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Card className="space-y-6 p-8 backdrop-blur-sm">
+            <H1 className="animate-fade-in-from-bottom text-center">
+              Email Confirmation
+            </H1>
+            <CallbackStatusComponent status={status} />
+          </Card>
         </div>
       </div>
     </div>

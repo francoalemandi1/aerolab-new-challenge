@@ -1,294 +1,151 @@
-# Aerolab Challenge
+# Gaming Haven
 
-A modern, full-stack application built with Next.js, TypeScript, Supabase, and the latest web technologies. This project demonstrates best practices in web development including authentication, real-time updates, comprehensive testing, and beautiful UI components.
+A modern gaming collection platform built with Next.js, Supabase, and TypeScript. Discover, collect, and manage your favorite games.
 
-## 🚀 Tech Stack
+**🚀 Live Demo**: [https://the-gaming-haven.vercel.app](https://the-gaming-haven.vercel.app)
 
-### Core Technologies
+## Tech Stack
 
 - **Next.js 15** - React framework with App Router
-- **TypeScript** - Type safety and better developer experience
-- **Tailwind CSS** - Utility-first CSS framework
-- **Supabase** - Backend-as-a-Service with authentication and database
+- **TypeScript** - Type safety
+- **Supabase** - Authentication & database
+- **Tailwind CSS** - Styling
+- **IGDB API** - Game data
+- **Vitest** - Testing
 
-### UI & Animation
+## Prerequisites
 
-- **shadcn/ui** - Modern, accessible UI components
-- **Radix UI** - Unstyled, accessible UI primitives
-- **Framer Motion** - Smooth animations and micro-interactions
-- **Lucide Icons** - Beautiful, customizable icon library
-
-### Forms & Validation
-
-- **React Hook Form** - Performant form library
-- **Zod** - TypeScript-first schema validation
-
-### Data Fetching & State Management
-
-- **TanStack Query (React Query)** - Server state management
-- **React Virtual** - Virtualization for large lists
-
-### Testing
-
-- **Vitest** - Fast unit testing framework
-- **React Testing Library** - Component testing utilities
-- **Storybook** - Component development and testing
-
-### Developer Tools
-
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **TypeScript** - Static type checking
-
-### Email & Communication
-
-### Deployment & CI/CD
-
-- **Vercel** - Production and staging deployments
-- **GitHub Actions** - Continuous integration and deployment
-
-## ✨ Features
-
-- 🔐 **Authentication System** - Secure login/signup with Supabase
-- 📧 **Email Integration** - Password reset and transactional emails
-- 🎨 **Modern UI** - Beautiful, responsive design with atomic design principles
-- ⚡ **Performance Optimized** - Web Vitals optimized, image optimization
-- 🔍 **SEO Ready** - Proper metadata, semantic HTML, SSR
-- ♿ **Accessible** - Keyboard navigation, screen reader support
-- 🧪 **Well Tested** - Unit tests, integration tests, Storybook
-- 🚀 **Production Ready** - CI/CD pipeline, health checks, monitoring
-- 📱 **Responsive** - Works perfectly on all devices
-- 🔒 **Secure** - Environment variables protection, middleware security
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
-- Node.js 18.0.0 or higher
-- npm or yarn
+- Node.js 18+
+- npm/yarn/pnpm
 - Supabase account
 
-### Installation
+## Setup
 
-1. **Clone the repository**
+1. **Clone & install**
 
    ```bash
    git clone <repository-url>
    cd aerolab-challenge
-   ```
-
-2. **Install dependencies**
-
-   ```bash
    npm install
    ```
 
-3. **Set up environment variables**
+2. **Environment variables**
 
    ```bash
    cp .env.example .env.local
    ```
 
-   Fill in your environment variables in `.env.local`:
-   - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
-   - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+   Required variables:
 
-4. **Run the development server**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   IGDB_CLIENT_ID=your_igdb_client_id
+   IGDB_CLIENT_SECRET=your_igdb_client_secret
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
+
+3. **Database setup**
+
+   Create tables in Supabase SQL Editor:
+
+   ```sql
+   -- Enable RLS
+   ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
+
+   -- Saved games table
+   CREATE TABLE saved_games (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+     igdb_id INTEGER NOT NULL,
+     game_data JSONB NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     UNIQUE(user_id, igdb_id)
+   );
+
+   -- RLS policies
+   ALTER TABLE saved_games ENABLE ROW LEVEL SECURITY;
+
+   CREATE POLICY "Users can manage their own saved games" ON saved_games
+   FOR ALL USING (auth.uid() = user_id);
+   ```
+
+4. **Run development server**
 
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   Open [http://localhost:3000](http://localhost:3000)
 
-### Database Setup
+## Scripts
 
-1. Create a new Supabase project
-2. Run the following SQL to create the profiles table:
-
-```sql
--- Create profiles table
-CREATE TABLE profiles (
-  id UUID REFERENCES auth.users ON DELETE CASCADE,
-  first_name TEXT,
-  last_name TEXT,
-  bio TEXT,
-  avatar_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-
-  PRIMARY KEY (id)
-);
-
--- Set up Row Level Security (RLS)
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-
--- Create policies
-CREATE POLICY "Public profiles are viewable by everyone." ON profiles
-  FOR SELECT USING (true);
-
-CREATE POLICY "Users can insert their own profile." ON profiles
-  FOR INSERT WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile." ON profiles
-  FOR UPDATE USING (auth.uid() = id);
-
--- Create a trigger to automatically create a profile for new users
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id)
-  VALUES (NEW.id);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
-```
-
-## 📝 Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint errors
-- `npm run prettier` - Format code with Prettier
-- `npm run type-check` - Run TypeScript type checking
+- `npm run dev` - Development server
+- `npm run build` - Production build
+- `npm run start` - Production server
 - `npm run test` - Run tests
-- `npm run test:ui` - Run tests with UI
-- `npm run test:coverage` - Run tests with coverage
-- `npm run storybook` - Start Storybook
-- `npm run build-storybook` - Build Storybook
-- `npm run test-storybook` - Run Storybook tests
+- `npm run test:ui` - Test with UI
+- `npm run lint` - Lint code
+- `npm run type-check` - Type checking
 
-## 🛡️ Branch Protection & Git Hooks
-
-This project enforces code quality and security through:
-
-- **Husky Git Hooks**: Pre-commit and commit message validation
-- **Branch Protection Rules**: Prevent direct pushes to main, require PR reviews and passing CI checks
-- **GitHub Actions**: Automated testing, security audits, and deployment
-
-**Important**: Direct pushes to `main` are blocked. All changes must go through Pull Requests with:
-
-- ✅ Passing tests and linting
-- ✅ Code review approval
-- ✅ Up-to-date branch
-- ✅ Conventional commit messages
-
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for detailed development workflow and [docs/BRANCH-PROTECTION.md](docs/BRANCH-PROTECTION.md) for branch protection setup.
-
-## 🏗️ Project Structure
-
-```
-aerolab-challenge/
-├── app/                     # Next.js App Router
-│   ├── auth/               # Authentication routes
-│   │   ├── ui/            # Route-specific UI components
-│   │   │   ├── atoms/     # Basic auth components
-│   │   │   ├── molecules/ # Composed auth components
-│   │   │   ├── organisms/ # Complex auth forms
-│   │   │   └── templates/ # Auth page templates
-│   │   └── signin/        # Sign in page
-│   ├── api/               # API routes
-│   │   └── health/        # Health check endpoint
-│   ├── globals.css        # Global styles
-│   └── layout.tsx         # Root layout
-├── ui/                     # Global UI components (Atomic Design)
-│   ├── atoms/             # Basic components (Button, Input)
-│   ├── molecules/         # Composed components
-│   ├── organisms/         # Complex components
-│   └── templates/         # Page templates
-├── providers/             # React context providers
-├── lib/                   # Utility libraries and configurations
-├── hooks/                 # Custom React hooks
-├── types/                 # TypeScript type definitions
-├── utils/                 # Utility functions
-├── constants/             # Application constants
-├── __tests__/            # Test files
-├── public/               # Static assets (favicon, images)
-├── middleware.ts         # Next.js middleware
-└── ...config files
-```
-
-## 🎨 Atomic Design Architecture
-
-This project follows **Atomic Design** principles for component organization:
-
-### Global Components (`/ui`)
-
-- **Atoms**: Basic building blocks (Button, Input, etc.)
-- **Molecules**: Simple groups of atoms (Form fields, etc.)
-- **Organisms**: Complex components made of molecules/atoms
-- **Templates**: Page-level layout components
-
-### Route-Specific Components (`/app/[route]/ui`)
-
-Each route segment can have its own UI folder with the same atomic structure for components specific to that route.
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Connect your GitHub repository to Vercel
-2. Set up environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
-
-### Manual Deployment
-
-1. Build the application:
-
-   ```bash
-   npm run build
-   ```
-
-2. Start the production server:
-   ```bash
-   npm start
-   ```
-
-## 🧪 Testing
-
-Run tests with:
+## Testing
 
 ```bash
+# Run all tests
 npm run test
-```
 
-Run tests with coverage:
-
-```bash
+# Run with coverage
 npm run test:coverage
+
+# Run specific test file
+npm run test -- game-card.test.tsx
+
+# Run tests in watch mode
+npm run test:watch
 ```
 
-Run Storybook:
+## Project Structure
 
-```bash
-npm run storybook
+```
+app/
+├── (private)/          # Protected routes
+│   └── games/         # Games dashboard
+├── (public)/          # Public routes
+│   └── auth/         # Authentication
+├── api/              # API routes
+└── globals.css       # Global styles
+
+components/           # Reusable components
+hooks/               # Custom React hooks
+lib/                 # Utilities & configs
+providers/           # Context providers
+types/               # TypeScript types
+ui/                  # UI components (Atomic Design)
+├── atoms/           # Basic components
+├── molecules/       # Composed components
+├── organisms/       # Complex components
+└── templates/       # Page layouts
 ```
 
-## 🤝 Contributing
+## Key Features
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes
-4. Run tests: `npm test`
-5. Commit your changes: `git commit -m 'Add some feature'`
-6. Push to the branch: `git push origin feature/your-feature`
-7. Submit a pull request
+- 🔐 Authentication (Supabase)
+- 🎮 Game search & discovery (IGDB API)
+- 💾 Save/unsave games
+- 📱 Responsive design
+- 🎨 Modern UI with animations
+- ⚡ Optimized performance
+- 🧪 Comprehensive testing
+- 🛡️ Error boundaries & handling
 
-## 📄 License
+## Environment Setup Notes
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- **IGDB API**: Register at [IGDB API](https://api.igdb.com) for game data
+- **Supabase**: Create project at [supabase.com](https://supabase.com)
+- **Local Development**: Uses `http://localhost:3000`
+- **Production**: Deployed on Vercel
 
-## 🙏 Acknowledgments
+---
 
-- [Next.js](https://nextjs.org/) for the amazing framework
-- [Supabase](https://supabase.com/) for the backend infrastructure
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful components
-- [Tailwind CSS](https://tailwindcss.com/) for the styling system
+For issues or questions, check the existing tests and component stories for usage examples.

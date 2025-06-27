@@ -61,8 +61,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       user: data.user,
       session: data.session,
-      message:
-        "Account created successfully. Please check your email to confirm your account.",
+      message: "Account created successfully! Please check your email to confirm your account.",
     });
 
     // Set security headers

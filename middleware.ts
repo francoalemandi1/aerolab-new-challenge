@@ -36,8 +36,8 @@ export async function middleware(request: NextRequest) {
         // Authenticated users go to /games
         return NextResponse.redirect(new URL("/games", request.url));
       } else {
-        // Unauthenticated users stay on root (home page)
-        return NextResponse.next();
+        // Unauthenticated users go to signin
+        return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     }
 

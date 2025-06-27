@@ -66,8 +66,23 @@ export function useAuth() {
         loading: false,
       });
 
-      // Let middleware handle redirections by refreshing the page
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+      // Handle redirections based on auth state changes
+      if (event === "SIGNED_OUT") {
+        // Check if we're on a protected page and redirect to signin
+        const currentPath = window.location.pathname;
+        const isProtectedRoute = 
+          currentPath.startsWith("/home") ||
+          currentPath.startsWith("/dashboard") ||
+          currentPath === "/";
+        
+        if (isProtectedRoute) {
+          console.log("🔄 Redirecting unauthenticated user to /auth/signin");
+          router.push("/auth/signin");
+        } else {
+          router.refresh();
+        }
+      } else {
+        // For other events (including SIGNED_IN), just refresh to let middleware handle redirects
         router.refresh();
       }
     });
@@ -93,6 +108,9 @@ export function useAuth() {
         return { error: { message: result.error || "Sign in failed" } };
       }
 
+      // Force a session refresh to trigger auth state change
+      await supabase.auth.refreshSession();
+      
       return {};
     } catch (error) {
       console.error("Sign in error:", error);
@@ -140,6 +158,9 @@ export function useAuth() {
         return { error: { message: result.error || "Sign out failed" } };
       }
 
+      // Clear the session locally to trigger auth state change
+      await supabase.auth.signOut();
+      
       return {};
     } catch (error) {
       console.error("Sign out error:", error);

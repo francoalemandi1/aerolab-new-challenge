@@ -14,9 +14,7 @@ export const GameContentSection = ({
 }: GameContentSectionProps) => {
   return (
     <div className={className}>
-      <H2 className="mb-2 text-h2-mobile text-gray-dark md:text-h2-desktop">
-        {title}
-      </H2>
+      <H2 className="mb-2">{title}</H2>
       <div className="text-sm leading-relaxed text-gray md:text-base">
         {children}
       </div>

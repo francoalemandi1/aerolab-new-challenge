@@ -44,9 +44,11 @@ describe("GameStatChip", () => {
   });
 
   it("renders icon with correct styling", () => {
-    render(<GameStatChip icon={Star} label="Rating" value="90" />);
+    const { container } = render(
+      <GameStatChip icon={Star} label="Rating" value="90" />
+    );
 
-    const iconElement = screen.getByRole("img", { hidden: true });
+    const iconElement = container.querySelector("svg");
     expect(iconElement).toHaveClass("h-4", "w-4", "text-violet-600");
   });
 });

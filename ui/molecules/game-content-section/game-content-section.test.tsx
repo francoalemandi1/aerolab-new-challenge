@@ -51,12 +51,12 @@ describe("GameContentSection", () => {
     render(<GameContentSection title="Test Title">Content</GameContentSection>);
 
     const titleElement = screen.getByText("Test Title");
-    expect(titleElement).toHaveClass(
-      "mb-2",
-      "text-h2-mobile",
-      "text-gray-dark",
-      "md:text-h2-desktop"
-    );
+    // Check for H2 default classes plus the additional mb-2 class
+    expect(titleElement).toHaveClass("font-inter");
+    expect(titleElement).toHaveClass("font-semibold");
+    expect(titleElement).toHaveClass("md:text-h2-desktop");
+    expect(titleElement).toHaveClass("text-gray-dark");
+    expect(titleElement).toHaveClass("mb-2");
   });
 
   it("renders content with correct styling", () => {
@@ -64,7 +64,8 @@ describe("GameContentSection", () => {
       <GameContentSection title="Test">Content text</GameContentSection>
     );
 
-    const contentElement = container.querySelector("div > div:last-child");
+    // Get the content div (the second div child)
+    const contentElement = container.querySelector("div > div:nth-child(2)");
     expect(contentElement).toHaveClass(
       "text-sm",
       "leading-relaxed",

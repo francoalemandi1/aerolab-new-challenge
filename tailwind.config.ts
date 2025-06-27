@@ -32,6 +32,7 @@ const config: Config = {
           "100": "#E7C0DB",
           "200": "#C698B8",
           "600": "#FF00AE",
+          "gradient-start": "#FF97DE",
         },
         violet: {
           "50": "#E2DCE7",
@@ -94,6 +95,8 @@ const config: Config = {
         "gradient-violet": "linear-gradient(135deg, #6727A6 0%, #3C1661 100%)",
         "gradient-violet-text":
           "linear-gradient(135deg, #6727A6 0%, #3C1661 100%)",
+        "gradient-logo":
+          "linear-gradient(to top, #FFB4F0 16%, rgba(255, 255, 255, 0.9) 100%)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -225,7 +228,6 @@ const config: Config = {
             transform: "translateY(0)",
           },
         },
-
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

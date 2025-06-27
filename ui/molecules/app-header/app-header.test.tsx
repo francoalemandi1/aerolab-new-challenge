@@ -66,7 +66,7 @@ describe("AppHeader", () => {
     render(<AppHeader title="Test Title" />);
     const logo = screen.getByTestId("app-logo");
 
-    expect(logo).toHaveAttribute("width", "24");
-    expect(logo).toHaveAttribute("height", "24");
+    expect(logo).toHaveAttribute("width", "20");
+    expect(logo).toHaveAttribute("height", "20");
   });
 });

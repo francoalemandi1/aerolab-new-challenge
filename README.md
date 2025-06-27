@@ -46,32 +46,7 @@ A modern gaming collection platform built with Next.js, Supabase, and TypeScript
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
-3. **Database setup**
-
-   Create tables in Supabase SQL Editor:
-
-   ```sql
-   -- Enable RLS
-   ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
-
-   -- Saved games table
-   CREATE TABLE saved_games (
-     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-     igdb_id INTEGER NOT NULL,
-     game_data JSONB NOT NULL,
-     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-     UNIQUE(user_id, igdb_id)
-   );
-
-   -- RLS policies
-   ALTER TABLE saved_games ENABLE ROW LEVEL SECURITY;
-
-   CREATE POLICY "Users can manage their own saved games" ON saved_games
-   FOR ALL USING (auth.uid() = user_id);
-   ```
-
-4. **Run development server**
+3. **Run development server**
 
    ```bash
    npm run dev
@@ -127,17 +102,6 @@ ui/                  # UI components (Atomic Design)
 ├── organisms/       # Complex components
 └── templates/       # Page layouts
 ```
-
-## Key Features
-
-- 🔐 Authentication (Supabase)
-- 🎮 Game search & discovery (IGDB API)
-- 💾 Save/unsave games
-- 📱 Responsive design
-- 🎨 Modern UI with animations
-- ⚡ Optimized performance
-- 🧪 Comprehensive testing
-- 🛡️ Error boundaries & handling
 
 ## Environment Setup Notes
 

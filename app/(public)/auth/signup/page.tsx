@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { SignUpForm } from "../_ui/organisms/signup-form";
-import { H1, Body } from "@/ui/atoms/typography";
+import { H1, Paragraph } from "@/ui/atoms/typography";
 import { Card } from "@/ui/molecules/card";
 import { WasdKeycaps } from "@/ui/atoms";
 
@@ -79,15 +79,15 @@ export default function SignUpPage() {
               <H1 className="animate-fade-in-from-bottom">
                 Create your account
               </H1>
-              <Body className="text-gray">
+              <Paragraph className="text-gray">
                 Sign up to get started with your journey
-              </Body>
+              </Paragraph>
             </div>
 
             <SignUpForm />
 
             <div className="text-center">
-              <Body className="text-sm text-gray">
+              <Paragraph className="text-sm text-gray">
                 Already have an account?{" "}
                 <Link
                   href="/auth/signin"
@@ -95,7 +95,7 @@ export default function SignUpPage() {
                 >
                   Sign in
                 </Link>
-              </Body>
+              </Paragraph>
             </div>
           </Card>
         </div>

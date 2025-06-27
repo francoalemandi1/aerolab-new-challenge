@@ -4,19 +4,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hooks/useAuth";
+import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations";
 import { Button } from "@/ui/atoms/button";
 import { Input } from "@/ui/atoms/input";
-import { Body, H2 } from "@/ui/atoms/typography";
-import { AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react";
+import { Paragraph } from "@/ui/atoms/typography";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { SignUpSuccess } from "./signup-success";
 
 export function SignUpForm() {
   const { signUp } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState<string>("");
+
+  const { isLoading, error, success, submitForm } = useFormSubmission();
 
   const {
     register,
@@ -26,68 +28,27 @@ export function SignUpForm() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = async (data: SignUpFormData) => {
-    setIsLoading(true);
-    setError(null);
-    setSuccess(false);
-
-    try {
-      const { error: authError } = await signUp(data);
-
-      if (authError) {
-        setError(authError.message);
-        return;
-      }
-
-      setSuccess(true);
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const onSubmit = submitForm(async (data: SignUpFormData) => {
+    setSubmittedEmail(data.email);
+    return await signUp(data);
+  });
 
   if (success) {
-    return (
-      <div className="space-y-6 text-center">
-        {/* Success Icon and Message */}
-        <div className="flex flex-col items-center space-y-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-600/10">
-            <CheckCircle className="h-8 w-8 text-green-600" />
-          </div>
-          <div className="space-y-2">
-            <H2 className="text-green-600">Account Created Successfully!</H2>
-            <Body className="text-gray">
-              Please check your email to confirm your account.
-            </Body>
-          </div>
-        </div>
-
-        {/* Success Card */}
-        <div className="rounded-secondary border border-green-600 bg-white p-4">
-          <Body className="text-sm font-medium text-green-600">
-            📧 We&apos;ve sent a confirmation email to your inbox
-          </Body>
-        </div>
-
-        {/* Instructions */}
-        <div className="space-y-3"></div>
-      </div>
-    );
+    return <SignUpSuccess email={submittedEmail} />;
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {error && (
+      {error ? (
         <div className="flex items-center gap-3 rounded-secondary border border-red-600/20 bg-red-600/10 p-4">
           <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600" />
-          <Body className="text-sm text-red-600">{error}</Body>
+          <Paragraph className="text-sm text-red-600">{error}</Paragraph>
         </div>
-      )}
+      ) : null}
 
       <div className="space-y-2">
         <label htmlFor="email" className="block">
-          <Body className="font-medium text-violet-600">Email</Body>
+          <Paragraph className="font-medium text-violet-600">Email</Paragraph>
         </label>
         <Input
           id="email"
@@ -101,14 +62,18 @@ export function SignUpForm() {
               : "focus:border-violet-600 focus:ring-violet-600/20"
           }
         />
-        {errors.email && (
-          <Body className="text-sm text-red-600">{errors.email.message}</Body>
-        )}
+        {errors.email ? (
+          <Paragraph className="text-sm text-red-600">
+            {errors.email.message}
+          </Paragraph>
+        ) : null}
       </div>
 
       <div className="space-y-2">
         <label htmlFor="password" className="block">
-          <Body className="font-medium text-violet-600">Password</Body>
+          <Paragraph className="font-medium text-violet-600">
+            Password
+          </Paragraph>
         </label>
         <div className="relative">
           <Input
@@ -134,20 +99,22 @@ export function SignUpForm() {
             )}
           </Button>
         </div>
-        {errors.password && (
-          <Body className="text-sm text-red-600">
+        {errors.password ? (
+          <Paragraph className="text-sm text-red-600">
             {errors.password.message}
-          </Body>
-        )}
-        <Body className="text-xs text-gray">
+          </Paragraph>
+        ) : null}
+        <Paragraph className="text-xs text-gray">
           Password must contain at least 8 characters, including uppercase,
           lowercase, and a number.
-        </Body>
+        </Paragraph>
       </div>
 
       <div className="space-y-2">
         <label htmlFor="confirmPassword" className="block">
-          <Body className="font-medium text-violet-600">Confirm Password</Body>
+          <Paragraph className="font-medium text-violet-600">
+            Confirm Password
+          </Paragraph>
         </label>
         <div className="relative">
           <Input
@@ -173,11 +140,11 @@ export function SignUpForm() {
             )}
           </Button>
         </div>
-        {errors.confirmPassword && (
-          <Body className="text-sm text-red-600">
+        {errors.confirmPassword ? (
+          <Paragraph className="text-sm text-red-600">
             {errors.confirmPassword.message}
-          </Body>
-        )}
+          </Paragraph>
+        ) : null}
       </div>
 
       <Button

@@ -1,4 +1,5 @@
 export { SignInForm } from "./signin-form";
+export { SignInContent } from "./signin-content";
 export { SignUpForm } from "./signup-form";
-export { PasswordRecoveryForm } from "./password-recovery-form";
-export { ResetPasswordForm } from "./reset-password-form";
+export { SignUpSuccess } from "./signup-success";
+export { CallbackStatus } from "./callback-status";

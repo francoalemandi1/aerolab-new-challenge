@@ -15,9 +15,9 @@ export default function PrivateLayout({ children }: PrivateLayoutProps) {
           style={{
             backgroundImage:
               "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
-            backgroundSize: "390px 276px, 390px 276px",
+            backgroundSize: "100vw auto, 100vw auto",
             backgroundRepeat: "no-repeat, no-repeat",
-            backgroundPosition: "top left, top 390px",
+            backgroundPosition: "top left, top 100vw",
           }}
         />
 

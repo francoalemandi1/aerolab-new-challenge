@@ -18,11 +18,18 @@ export default async function AuthCallbackPage({
   const errorCode = Array.isArray(params.error_code)
     ? params.error_code[0]
     : params.error_code;
+  const success = Array.isArray(params.success)
+    ? params.success[0]
+    : params.success;
 
   let status: CallbackStatus = "error";
 
+  // If we have a success parameter, it means the API callback already handled the confirmation
+  if (success === "true") {
+    status = "success";
+  }
   // If there's an error from the callback URL
-  if (error || errorCode) {
+  else if (error || errorCode) {
     status = "error";
   }
   // If we have a code, try to exchange it for a session

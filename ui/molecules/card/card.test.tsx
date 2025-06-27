@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { Card } from "@/ui/molecules/card";
 import { Button } from "@/ui/atoms/button";
-import { H4, Body } from "@/ui/atoms/typography";
+import { H4, Paragraph } from "@/ui/atoms/typography";
 
 describe("Card Component", () => {
   describe("Basic Rendering", () => {
@@ -186,7 +186,7 @@ describe("Card Component", () => {
       render(
         <Card variant="default" radius="secondary">
           <H4>Card Title</H4>
-          <Body>This is the card body content.</Body>
+          <Paragraph>This is the card body content.</Paragraph>
           <Button size="sm">Action Button</Button>
         </Card>
       );
@@ -272,7 +272,7 @@ describe("Card Component", () => {
       render(
         <Card variant="gradient" data-testid="card">
           <H4 className="text-white">White Title</H4>
-          <Body className="text-white/90">White body text</Body>
+          <Paragraph className="text-white/90">White body text</Paragraph>
         </Card>
       );
 
@@ -287,7 +287,7 @@ describe("Card Component", () => {
       render(
         <Card variant="bordered">
           <H4 className="text-violet-900">Violet Title</H4>
-          <Body>Regular body text</Body>
+          <Paragraph>Regular body text</Paragraph>
         </Card>
       );
 
@@ -348,7 +348,9 @@ describe("Card Component", () => {
         <Card variant="default" radius="secondary">
           <div className="mb-4 aspect-square rounded bg-gray-200"></div>
           <H4 className="mb-2">Product Name</H4>
-          <Body className="mb-4 text-gray">Product description goes here</Body>
+          <Paragraph className="mb-4 text-gray">
+            Product description goes here
+          </Paragraph>
           <div className="flex items-center justify-between">
             <span className="font-semibold">$99.99</span>
             <Button size="sm">Add to Cart</Button>
@@ -372,9 +374,9 @@ describe("Card Component", () => {
           <div className="text-center">
             <div className="mb-4 text-4xl">🚀</div>
             <H4 className="mb-2 text-white">Premium Feature</H4>
-            <Body className="mb-4 text-white/90">
+            <Paragraph className="mb-4 text-white/90">
               Unlock advanced capabilities with our premium plan
-            </Body>
+            </Paragraph>
             <Button variant="secondary" size="sm">
               Learn More
             </Button>

@@ -1,9 +1,9 @@
 import React from "react";
-// eslint-disable-next-line
+
 import type { Meta, StoryObj } from "@storybook/react";
 import { Card } from "./card";
 import { Button } from "../../atoms/button";
-import { H4, Body } from "../../atoms/typography";
+import { H4, Paragraph } from "../../atoms/typography";
 
 const meta: Meta<typeof Card> = {
   title: "Design System/Components/Card",
@@ -47,10 +47,10 @@ export const Default: Story = {
     children: (
       <>
         <H4 className="mb-3">Default Card</H4>
-        <Body className="mb-4">
+        <Paragraph className="mb-4">
           Esta es una tarjeta por defecto con bordes redondeados secundarios y
           sombra sutil.
-        </Body>
+        </Paragraph>
         <Button size="sm">Acción</Button>
       </>
     ),
@@ -64,10 +64,10 @@ export const Gradient: Story = {
     children: (
       <>
         <H4 className="mb-3 text-white">Gradient Card</H4>
-        <Body className="mb-4 text-white/90">
+        <Paragraph className="mb-4 text-white/90">
           Tarjeta con fondo degradado y bordes redondeados principales para
           elementos destacados.
-        </Body>
+        </Paragraph>
         <Button variant="secondary" size="sm">
           Acción
         </Button>
@@ -83,10 +83,10 @@ export const Bordered: Story = {
     children: (
       <>
         <H4 className="mb-3 text-violet-900">Bordered Card</H4>
-        <Body className="mb-4">
+        <Paragraph className="mb-4">
           Tarjeta con borde destacado en color violeta para elementos que
           requieren atención especial.
-        </Body>
+        </Paragraph>
         <Button variant="outline" size="sm">
           Acción
         </Button>
@@ -102,10 +102,10 @@ export const MainRadius: Story = {
     children: (
       <>
         <H4 className="mb-3">Card with Main Radius</H4>
-        <Body className="mb-4">
+        <Paragraph className="mb-4">
           Esta tarjeta utiliza el border radius principal (30px) para un aspecto
           más suave y redondeado.
-        </Body>
+        </Paragraph>
         <Button size="sm">Acción</Button>
       </>
     ),
@@ -117,7 +117,9 @@ export const SimpleContent: Story = {
     variant: "default",
     radius: "secondary",
     children: (
-      <Body>Contenido simple de tarjeta sin elementos adicionales.</Body>
+      <Paragraph>
+        Contenido simple de tarjeta sin elementos adicionales.
+      </Paragraph>
     ),
   },
 };
@@ -129,14 +131,14 @@ export const WithLongContent: Story = {
     children: (
       <>
         <H4 className="mb-3">Título de Tarjeta Larga</H4>
-        <Body className="mb-4">
+        <Paragraph className="mb-4">
           Esta es una tarjeta con contenido más extenso para probar cómo se
           comporta el componente con diferentes cantidades de texto. El diseño
           debe mantener su estructura y legibilidad independientemente de la
           longitud del contenido. Lorem ipsum dolor sit amet, consectetur
           adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
           magna aliqua.
-        </Body>
+        </Paragraph>
         <div className="flex gap-2">
           <Button size="sm">Primario</Button>
           <Button variant="outline" size="sm">

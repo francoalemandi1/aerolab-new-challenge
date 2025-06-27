@@ -18,7 +18,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <div className={cn("relative flex items-center gap-3 md:gap-4", className)}>
       {/* Espaciador izquierdo en desktop cuando hay menú */}
-      {showMenu && <div className="hidden md:block md:w-32" />}
+      {showMenu ? <div className="hidden md:block md:w-32" /> : null}
 
       {/* Contenedor para ícono y título - izquierda en mobile, centro en desktop */}
       <div className="flex flex-1 items-center gap-3 md:justify-center md:gap-4">
@@ -42,11 +42,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       </div>
 
       {/* Mobile Menu - Only show if showMenu is true */}
-      {showMenu && (
+      {showMenu ? (
         <div className="w-auto shrink-0 md:w-32">
           <MobileMenu />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

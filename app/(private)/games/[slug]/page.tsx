@@ -109,7 +109,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
   }
 
   return (
-    <div className="min-h-screen px-6 py-8 md:px-12 md:py-12">
+    <div className="min-h-screen px-6 py-8 md:px-12 md:pb-12 md:pt-32">
       <div className="mx-auto max-w-4xl">
         {/* Back Button and Search - Desktop: same row */}
         <div className="mb-8 md:mb-12 md:flex md:items-start md:gap-8">

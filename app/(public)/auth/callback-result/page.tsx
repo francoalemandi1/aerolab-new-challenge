@@ -24,7 +24,23 @@ function AuthCallbackResultContent() {
 
   useEffect(() => {
     const statusParam = searchParams.get("status") as CallbackStatus;
-    if (
+    const successParam = searchParams.get("success");
+    const errorParam = searchParams.get("error");
+
+    // Check for success parameter first
+    if (successParam === "true") {
+      setStatus("success");
+      // Auto-redirect on success
+      setTimeout(() => {
+        router.push("/games");
+      }, 3000);
+    }
+    // Then check for error parameter
+    else if (errorParam) {
+      setStatus("error");
+    }
+    // Then check for status parameter (legacy support)
+    else if (
       statusParam &&
       ["success", "expired", "invalid", "error"].includes(statusParam)
     ) {
@@ -37,7 +53,7 @@ function AuthCallbackResultContent() {
         }, 3000);
       }
     } else {
-      // If no valid status param, default to error
+      // If no valid params, default to error
       setStatus("error");
     }
   }, [searchParams, router]);

@@ -13,14 +13,12 @@ export const GamingPageLayout = ({ className }: GamingPageLayoutProps) => {
       {/* Header - Server Component */}
       <AppHeader
         title="Gaming Haven Z"
-        className="mb-8 md:mb-8"
+        className="mb-6 md:mb-8"
         showMenu={true}
       />
 
-      {/* Search - Client Component */}
-      <div className="md:mx-auto md:max-w-2xl">
-        <GameSearch placeholder="Search games..." />
-      </div>
+      {/* Game Search - Client Component */}
+      <GameSearch className="mb-6 md:mb-8" />
 
       {/* Saved games section - Client Component */}
       <SavedGamesSection className="mb-6 mt-8 md:mt-20" />

@@ -1,93 +1,84 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { signInSchema } from "@/lib/validations";
-import { headers } from "next/headers";
+import { z } from "zod";
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+
+  // Basic CSRF protection - ensure request comes from our domain
+  if (!origin || !referer || !referer.startsWith(origin)) {
+    return NextResponse.json(
+      { error: "Invalid request origin" },
+      { status: 403 }
+    );
+  }
+
+  let body;
   try {
-    console.log("🔐 Signin API route called");
+    // Get the raw body as text first for debugging
+    const rawBody = await request.text();
 
-    // CSRF Protection
-    const headersList = await headers();
-    const origin = headersList.get("origin");
-    const referer = headersList.get("referer");
-
-    console.log("🌐 Origin:", origin, "Referer:", referer);
-
-    if (!origin || !referer || !referer.startsWith(origin)) {
-      console.log("❌ CSRF validation failed");
+    // Check if body is empty
+    if (!rawBody.trim()) {
       return NextResponse.json(
-        { error: "Invalid request origin" },
-        { status: 403 }
-      );
-    }
-
-    // Parse JSON with better error handling
-    let body;
-    try {
-      const rawBody = await request.text();
-      console.log("📝 Raw request body:", rawBody);
-
-      if (!rawBody) {
-        return NextResponse.json(
-          { error: "Request body is empty" },
-          { status: 400 }
-        );
-      }
-
-      body = JSON.parse(rawBody);
-      console.log("✅ Parsed body:", {
-        email: body.email,
-        hasPassword: !!body.password,
-      });
-    } catch (parseError) {
-      console.error("❌ JSON parsing error:", parseError);
-      return NextResponse.json(
-        { error: "Invalid JSON format" },
+        { error: "Empty request body" },
         { status: 400 }
       );
     }
 
-    // Validate input
-    console.log("🔍 Validating input with Zod schema");
+    // Parse the JSON
+    body = JSON.parse(rawBody);
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON in request body" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Validate input with Zod schema
     const validatedData = signInSchema.parse(body);
 
-    console.log("🔗 Creating Supabase client");
+    // Create Supabase client
     const supabase = await createSupabaseServerClient();
 
-    console.log("🚀 Attempting signin with Supabase");
+    // Attempt signin with Supabase
     const { data, error } = await supabase.auth.signInWithPassword({
       email: validatedData.email,
       password: validatedData.password,
     });
 
     if (error) {
-      console.error("❌ Supabase signin error:", error.message);
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: error.message }, { status: 401 });
     }
 
-    console.log("✅ Signin successful for user:", data.user?.email);
-
-    // Set secure session cookie
-    const response = NextResponse.json({
-      user: data.user,
-      message: "Signed in successfully",
-    });
-
-    // Set security headers
-    response.headers.set("X-Content-Type-Options", "nosniff");
-    response.headers.set("X-Frame-Options", "DENY");
-    response.headers.set("X-XSS-Protection", "1; mode=block");
-
-    return response;
+    if (data.user && data.session) {
+      return NextResponse.json({
+        success: true,
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+        },
+      });
+    } else {
+      return NextResponse.json(
+        { error: "No user returned from signin" },
+        { status: 401 }
+      );
+    }
   } catch (error) {
-    console.error("💥 Signin error:", error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Invalid input", details: error.errors },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
-      {
-        error: "Invalid input data",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 400 }
+      { error: "Internal server error" },
+      { status: 500 }
     );
   }
 }

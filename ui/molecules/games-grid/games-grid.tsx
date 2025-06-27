@@ -28,7 +28,6 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
       onDeleteGame(id);
     } else {
       removeGame(id);
-      console.log("Game removed from collection:", id);
     }
   };
 

@@ -5,16 +5,17 @@ import { RefreshCw } from "lucide-react";
 
 export default function AuthCallbackPage() {
   useEffect(() => {
-    // Redirect to API route with all current search parameters
-    const currentUrl = new URL(window.location.href);
+    // Create API URL for callback handling
     const apiUrl = new URL("/api/auth/callback", window.location.origin);
 
-    // Copy all search parameters to the API URL
-    currentUrl.searchParams.forEach((value, key) => {
+    // Pass through all query parameters to the API
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.forEach((value, key) => {
       apiUrl.searchParams.set(key, value);
     });
 
-    console.log("Redirecting to API callback:", apiUrl.toString());
+    // Redirect to API callback handler which will handle the logic
+    // and then redirect to the appropriate result page
     window.location.href = apiUrl.toString();
   }, []);
 

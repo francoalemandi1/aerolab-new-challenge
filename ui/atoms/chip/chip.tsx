@@ -20,7 +20,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           "md:py-2 md:text-base",
           isActive
             ? "bg-violet-600 px-2.5 text-white md:px-4"
-            : "bg-transparent px-1.5 text-violet-600 hover:bg-violet-50 md:px-3",
+            : "bg-transparent px-1.5 text-violet-600 hover:bg-violet-50 md:px-3 md:hover:bg-transparent",
           className
         )}
         {...props}

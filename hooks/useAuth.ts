@@ -38,7 +38,7 @@ export function useAuth() {
       } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("Error getting session:", error);
+        // Handle error silently
       }
 
       setAuthState({
@@ -54,12 +54,6 @@ export function useAuth() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log(
-        "🔄 Auth state changed:",
-        event,
-        session?.user?.email || "No user"
-      );
-
       setAuthState({
         user: session?.user ?? null,
         session,
@@ -76,7 +70,6 @@ export function useAuth() {
           currentPath === "/";
 
         if (isProtectedRoute) {
-          console.log("🔄 Redirecting unauthenticated user to /auth/signin");
           router.push("/auth/signin");
         } else {
           router.refresh();

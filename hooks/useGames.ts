@@ -30,7 +30,6 @@ export function useGames() {
     (game: Omit<Game, "addedAt">) => {
       // Verificar si el juego ya existe
       if (savedGames.some((savedGame: Game) => savedGame.id === game.id)) {
-        console.log("Game already saved:", game.title);
         return false;
       }
 

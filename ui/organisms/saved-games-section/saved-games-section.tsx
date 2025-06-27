@@ -17,9 +17,8 @@ export const SavedGamesSection: React.FC<SavedGamesSectionProps> = ({
   // Determinar si hay juegos guardados
   const hasGames = savedGames.length > 0;
 
-  const handleFilterChange = (filter: FilterType) => {
-    setActiveFilter(filter);
-    console.log("Filter changed to:", filter);
+  const handleFilterChange = (newFilter: FilterType) => {
+    setActiveFilter(newFilter);
   };
 
   // Mostrar spinner durante la hidratación

@@ -39,12 +39,12 @@ export function SignInForm() {
         return;
       }
 
-      // Success - redirect to intended page or home
+      // Success - redirect to intended page or games
       const redirectTo = searchParams.get("redirectTo");
       if (redirectTo) {
         router.push(redirectTo);
       } else {
-        router.push("/home");
+        router.push("/games");
       }
     } catch {
       setError("An unexpected error occurred. Please try again.");
@@ -118,10 +118,10 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button 
-        type="submit" 
-        className="w-full bg-gradient-violet hover:opacity-90 text-white border-0" 
-        disabled={isLoading} 
+      <Button
+        type="submit"
+        className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
+        disabled={isLoading}
         size="lg"
       >
         {isLoading ? "Signing in..." : "Sign In"}

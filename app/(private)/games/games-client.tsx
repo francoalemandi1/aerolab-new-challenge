@@ -2,6 +2,6 @@
 
 import { GamingTemplate } from "@/ui/templates";
 
-export function HomeClient() {
+export function GamesClient() {
   return <GamingTemplate />;
 }

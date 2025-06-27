@@ -20,18 +20,19 @@ export async function POST(request: NextRequest) {
     // Parse JSON with better error handling
     let body;
     try {
+      // Get the raw body as text first for debugging
       const rawBody = await request.text();
-      console.log("Raw request body:", rawBody);
 
-      if (!rawBody) {
+      // Check if body is empty
+      if (!rawBody.trim()) {
         return NextResponse.json(
-          { error: "Request body is empty" },
+          { error: "Empty request body" },
           { status: 400 }
         );
       }
 
+      // Parse the JSON
       body = JSON.parse(rawBody);
-      console.log("Parsed body:", body);
     } catch (parseError) {
       console.error("JSON parsing error:", parseError);
       return NextResponse.json(
@@ -61,7 +62,8 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       user: data.user,
       session: data.session,
-      message: "Account created successfully! Please check your email to confirm your account.",
+      message:
+        "Account created successfully! Please check your email to confirm your account.",
     });
 
     // Set security headers

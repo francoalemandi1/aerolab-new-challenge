@@ -2,30 +2,55 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase";
 
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-  const next = requestUrl.searchParams.get("next") ?? "/home";
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const error = searchParams.get("error");
+  const errorCode = searchParams.get("error_code");
+
+  if (error || errorCode) {
+    return NextResponse.redirect(
+      `${origin}/auth/callback-result?error=${encodeURIComponent(
+        error || "Unknown error"
+      )}&error_code=${encodeURIComponent(errorCode || "unknown")}`
+    );
+  }
 
   if (code) {
     const supabase = await createSupabaseServerClient();
 
     try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (error) {
-        console.error("Auth callback error:", error);
+        throw error;
+      }
+
+      if (data.user && data.session) {
+        // Success! Redirect to success page
         return NextResponse.redirect(
-          new URL("/auth/signin?error=Authentication failed", requestUrl.origin)
+          `${origin}/auth/callback-result?success=true`
+        );
+      } else {
+        // No user or session in response
+        return NextResponse.redirect(
+          `${origin}/auth/callback-result?error=${encodeURIComponent(
+            "No user session created"
+          )}`
         );
       }
     } catch (error) {
-      console.error("Auth callback error:", error);
       return NextResponse.redirect(
-        new URL("/auth/signin?error=Authentication failed", requestUrl.origin)
+        `${origin}/auth/callback-result?error=${encodeURIComponent(
+          error instanceof Error ? error.message : "Authentication failed"
+        )}`
       );
     }
+  } else {
+    // No code found in callback
+    return NextResponse.redirect(
+      `${origin}/auth/callback-result?error=${encodeURIComponent(
+        "No authorization code received"
+      )}`
+    );
   }
-
-  // Redirect to the intended page or home
-  return NextResponse.redirect(new URL(next, requestUrl.origin));
 }

@@ -3,82 +3,65 @@ import type { NextRequest } from "next/server";
 import { createSupabaseMiddlewareClient } from "@/lib/supabase";
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  // Add security headers
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "origin-when-cross-origin");
-  response.headers.set("X-XSS-Protection", "1; mode=block");
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()"
-  );
-
-  const supabase = createSupabaseMiddlewareClient(request, response);
-
-  // Refresh session if expired - required for Server Components
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { pathname } = request.nextUrl;
 
-  // Define protected and public routes
-  const isProtectedRoute =
-    pathname.startsWith("/home") ||
-    pathname.startsWith("/dashboard") ||
-    pathname === "/";
+  // Skip middleware for static files, API routes we don't want to protect, and Next.js internals
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/static") ||
+    pathname.includes(".") ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/manifest.json"
+  ) {
+    return NextResponse.next();
+  }
 
-  const isAuthRoute =
-    pathname.startsWith("/auth/") && !pathname.startsWith("/auth/callback");
+  try {
+    // Create supabase client with the request
+    const supabase = createSupabaseMiddlewareClient(
+      request,
+      NextResponse.next()
+    );
 
-  // If user is authenticated
-  if (user) {
-    // Redirect authenticated users away from auth pages to home
-    if (isAuthRoute) {
-      console.log(
-        `🔄 Redirecting authenticated user from ${pathname} to /home`
-      );
-      return NextResponse.redirect(new URL("/home", request.url));
-    }
+    // Get session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    // Redirect authenticated users from root to home
+    // Special handling for root path
     if (pathname === "/") {
-      console.log(`🔄 Redirecting authenticated user from root to /home`);
-      return NextResponse.redirect(new URL("/home", request.url));
-    }
-  } else {
-    // If user is not authenticated and trying to access protected routes
-    if (isProtectedRoute) {
-      console.log(
-        `🔒 Redirecting unauthenticated user from ${pathname} to /auth/signin`
-      );
-      const redirectUrl = new URL("/auth/signin", request.url);
-      // Only add redirectTo if it's not the root path
-      if (pathname !== "/") {
-        redirectUrl.searchParams.set("redirectTo", pathname);
+      if (session?.user) {
+        // Authenticated users go to /games
+        return NextResponse.redirect(new URL("/games", request.url));
+      } else {
+        // Unauthenticated users stay on root (home page)
+        return NextResponse.next();
       }
-      return NextResponse.redirect(redirectUrl);
     }
+
+    // Public routes - allow access without authentication
+    const publicRoutes = [
+      "/auth/signin",
+      "/auth/signup",
+      "/auth/callback",
+      "/auth/callback-result",
+    ];
+    if (publicRoutes.includes(pathname)) {
+      return NextResponse.next();
+    }
+
+    // Protected routes - require authentication
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/auth/signin", request.url));
+    }
+
+    return NextResponse.next();
+  } catch {
+    // If there's an error checking auth, redirect to signin to be safe
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
-
-  // Special handling for password reset
-  if (pathname === "/auth/reset-password") {
-    // Allow access for password reset, but check for valid session in the component
-    return response;
-  }
-
-  // Log successful middleware execution for debugging
-  console.log(
-    `✅ Middleware passed for ${pathname} - User: ${user ? "authenticated" : "anonymous"}`
-  );
-
-  return response;
 }
 
 export const config = {

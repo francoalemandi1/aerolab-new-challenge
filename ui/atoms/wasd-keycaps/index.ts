@@ -1,1 +1,1 @@
-export { WASDKeycaps } from "./wasd-keycaps"; 
+export { WasdKeycaps } from "./wasd-keycaps";

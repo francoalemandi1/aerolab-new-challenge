@@ -29,8 +29,9 @@ export async function generateMetadata({
       };
     }
 
-    const gameDescription = gameData.summary || 
-      `Explore ${gameData.title} and add it to your gaming collection. ${gameData.genres?.[0] ? `Genre: ${gameData.genres[0]}.` : ''} ${gameData.releaseDate ? `Released: ${gameData.releaseDate}.` : ''}`.trim();
+    const gameDescription =
+      gameData.summary ||
+      `Explore ${gameData.title} and add it to your gaming collection. ${gameData.genres?.[0] ? `Genre: ${gameData.genres[0]}.` : ""} ${gameData.releaseDate ? `Released: ${gameData.releaseDate}.` : ""}`.trim();
 
     return {
       title: `${gameData.title} - Gaming Haven`,
@@ -45,23 +46,25 @@ export async function generateMetadata({
       openGraph: {
         title: `${gameData.title} | Gaming Haven`,
         description: gameDescription,
-        images: gameData.imageUrl ? [
-          {
-            url: gameData.imageUrl,
-            width: 1200,
-            height: 630,
-            alt: `${gameData.title} - Game Cover`,
-            type: "image/jpeg",
-          },
-        ] : [
-          {
-            url: "/game-logo.svg",
-            width: 512,
-            height: 512,
-            alt: "Gaming Haven - Game Details",
-            type: "image/svg+xml",
-          },
-        ],
+        images: gameData.imageUrl
+          ? [
+              {
+                url: gameData.imageUrl,
+                width: 1200,
+                height: 630,
+                alt: `${gameData.title} - Game Cover`,
+                type: "image/jpeg",
+              },
+            ]
+          : [
+              {
+                url: "/game-logo.svg",
+                width: 512,
+                height: 512,
+                alt: "Gaming Haven - Game Details",
+                type: "image/svg+xml",
+              },
+            ],
         type: "website",
         siteName: "Gaming Haven",
         locale: "en_US",
@@ -70,17 +73,19 @@ export async function generateMetadata({
         card: "summary_large_image",
         title: `${gameData.title} | Gaming Haven`,
         description: gameDescription,
-        images: gameData.imageUrl ? [
-          {
-            url: gameData.imageUrl,
-            alt: `${gameData.title} - Game Cover`,
-          },
-        ] : [
-          {
-            url: "/game-logo.svg",
-            alt: "Gaming Haven - Game Details",
-          },
-        ],
+        images: gameData.imageUrl
+          ? [
+              {
+                url: gameData.imageUrl,
+                alt: `${gameData.title} - Game Cover`,
+              },
+            ]
+          : [
+              {
+                url: "/game-logo.svg",
+                alt: "Gaming Haven - Game Details",
+              },
+            ],
         creator: "@gaminghaven",
         site: "@gaminghaven",
       },
@@ -104,12 +109,12 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
   }
 
   return (
-    <div className="min-h-screen px-6 py-8 md:px-12 md:py-12">
+    <div className="min-h-screen px-6 py-8 md:px-12 md:pb-12 md:pt-32">
       <div className="mx-auto max-w-4xl">
         {/* Back Button and Search - Desktop: same row */}
         <div className="mb-8 md:mb-12 md:flex md:items-start md:gap-8">
           <Link
-            href="/home"
+            href="/games"
             className="mb-6 inline-flex items-center gap-2 text-violet-600 transition-colors hover:text-violet-700 md:mb-0 md:flex-shrink-0 md:pt-4"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -278,7 +283,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
               {gameData.similarGames.map(game => (
                 <Link
                   key={game.id}
-                  href={`/home/${game.slug}`}
+                  href={`/games/${game.slug}`}
                   className="group block"
                 >
                   <div className="relative mb-2 aspect-[3/4] overflow-hidden rounded-lg">

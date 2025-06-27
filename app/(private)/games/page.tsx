@@ -1,14 +1,16 @@
 import { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { redirect } from "next/navigation";
-import { HomeClient } from "./home-client";
+import { GamesClient } from "./games-client";
 
 export const metadata: Metadata = {
   title: "Gaming Haven - Your Game Collection",
-  description: "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
+  description:
+    "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
   openGraph: {
     title: "Gaming Haven - Your Game Collection",
-    description: "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
+    description:
+      "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
     images: [
       {
         url: "/game-logo.svg",
@@ -24,7 +26,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Gaming Haven - Your Game Collection",
-    description: "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
+    description:
+      "Discover, collect, and explore your favorite games. Search through thousands of games and build your ultimate gaming collection.",
     images: [
       {
         url: "/game-logo.svg",
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage() {
+export default async function GamesPage() {
   const supabase = await createSupabaseServerClient();
 
   const {
@@ -46,5 +49,5 @@ export default async function HomePage() {
     redirect("/auth/signin");
   }
 
-  return <HomeClient />;
+  return <GamesClient />;
 }

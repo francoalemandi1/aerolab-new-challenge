@@ -38,7 +38,7 @@ export function useAuth() {
       } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("Error getting session:", error);
+        // Handle error silently
       }
 
       setAuthState({
@@ -54,12 +54,6 @@ export function useAuth() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log(
-        "🔄 Auth state changed:",
-        event,
-        session?.user?.email || "No user"
-      );
-
       setAuthState({
         user: session?.user ?? null,
         session,
@@ -70,13 +64,12 @@ export function useAuth() {
       if (event === "SIGNED_OUT") {
         // Check if we're on a protected page and redirect to signin
         const currentPath = window.location.pathname;
-        const isProtectedRoute = 
-          currentPath.startsWith("/home") ||
+        const isProtectedRoute =
+          currentPath.startsWith("/games") ||
           currentPath.startsWith("/dashboard") ||
           currentPath === "/";
-        
+
         if (isProtectedRoute) {
-          console.log("🔄 Redirecting unauthenticated user to /auth/signin");
           router.push("/auth/signin");
         } else {
           router.refresh();
@@ -110,7 +103,7 @@ export function useAuth() {
 
       // Force a session refresh to trigger auth state change
       await supabase.auth.refreshSession();
-      
+
       return {};
     } catch (error) {
       console.error("Sign in error:", error);
@@ -160,7 +153,7 @@ export function useAuth() {
 
       // Clear the session locally to trigger auth state change
       await supabase.auth.signOut();
-      
+
       return {};
     } catch (error) {
       console.error("Sign out error:", error);

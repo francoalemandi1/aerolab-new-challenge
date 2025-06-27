@@ -2,41 +2,44 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
-interface WASDKeycapsProps {
+interface WasdKeycapsProps {
   className?: string;
 }
 
-export const WASDKeycaps: React.FC<WASDKeycapsProps> = ({ className }) => {
+export const WasdKeycaps: React.FC<WasdKeycapsProps> = ({ className }) => {
   return (
-    <div className={cn("flex items-center justify-center gap-2", className)}>
-      {/* W Key */}
-      <div className="animate-fade-in-from-top">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-violet-600 bg-white text-sm font-semibold text-violet-600 shadow-sm transition-all hover:bg-violet-50 md:h-12 md:w-12 md:text-base">
-          W
-        </div>
+    <div className={cn("pointer-events-none absolute", className)}>
+      {/* Mobile Keys */}
+      <div className="animate-fade-in-down md:hidden">
+        <Image
+          src="/mobile-keys.svg"
+          alt="WASD Gaming Keys"
+          width={191}
+          height={56}
+          className="drop-shadow-lg"
+          style={{
+            animationDelay: "0.5s",
+            animationFillMode: "both",
+          }}
+        />
       </div>
-      
-      {/* A Key */}
-      <div className="animate-fade-in-from-top" style={{ animationDelay: "0.1s" }}>
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-violet-600 bg-white text-sm font-semibold text-violet-600 shadow-sm transition-all hover:bg-violet-50 md:h-12 md:w-12 md:text-base">
-          A
-        </div>
-      </div>
-      
-      {/* S Key */}
-      <div className="animate-fade-in-from-top" style={{ animationDelay: "0.2s" }}>
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-violet-600 bg-white text-sm font-semibold text-violet-600 shadow-sm transition-all hover:bg-violet-50 md:h-12 md:w-12 md:text-base">
-          S
-        </div>
-      </div>
-      
-      {/* D Key */}
-      <div className="animate-fade-in-from-top" style={{ animationDelay: "0.3s" }}>
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-violet-600 bg-white text-sm font-semibold text-violet-600 shadow-sm transition-all hover:bg-violet-50 md:h-12 md:w-12 md:text-base">
-          D
-        </div>
+
+      {/* Desktop Keys */}
+      <div className="hidden w-screen animate-fade-in-down md:block">
+        <Image
+          src="/desktop-keys.svg"
+          alt="WASD Gaming Keys"
+          width={1391}
+          height={177}
+          className="h-auto w-full drop-shadow-lg"
+          style={{
+            animationDelay: "0.5s",
+            animationFillMode: "both",
+          }}
+        />
       </div>
     </div>
   );
-}; 
+};

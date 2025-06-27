@@ -42,8 +42,6 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
 
 ### Email & Communication
 
-- **Mailgun** - Transactional email service
-
 ### Deployment & CI/CD
 
 - **Vercel** - Production and staging deployments
@@ -69,7 +67,6 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
 - Node.js 18.0.0 or higher
 - npm or yarn
 - Supabase account
-- Mailgun account (for email features)
 
 ### Installation
 
@@ -96,8 +93,6 @@ A modern, full-stack application built with Next.js, TypeScript, Supabase, and t
    - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
    - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
-   - `MAILGUN_API_KEY` - Your Mailgun API key
-   - `MAILGUN_DOMAIN` - Your Mailgun domain
 
 4. **Run the development server**
 

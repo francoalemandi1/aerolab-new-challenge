@@ -66,7 +66,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
       onGameSelect(igdbGame);
     } else {
       // Navegar a la página de detalle del juego usando el slug oficial de IGDB
-      router.push(`/home/${igdbGame.slug}`);
+      router.push(`/games/${igdbGame.slug}`);
     }
 
     // Limpiar el input después de seleccionar
@@ -110,7 +110,12 @@ export const GameSearch: React.FC<GameSearchProps> = ({
       debouncedSearchTerm.trim().length >= 1);
 
   return (
-    <div className={cn("relative mb-6 w-full", className)}>
+    <div
+      className={cn(
+        "relative mb-6 w-full md:mx-auto md:mb-4 md:max-w-md",
+        className
+      )}
+    >
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-pink-200 md:h-6 md:w-6" />
         {inputValue && (

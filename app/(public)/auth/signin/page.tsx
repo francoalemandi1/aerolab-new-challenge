@@ -1,17 +1,20 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { SignInForm } from "../ui/organisms/signin-form";
+import { SignInForm } from "../_ui/organisms/signin-form";
 import { H1, Body } from "@/ui/atoms/typography";
 import { Card } from "@/ui/molecules/card";
 import { LoadingSpinner } from "@/ui/atoms/loading-spinner";
+import { WasdKeycaps } from "@/ui/atoms";
 
 export const metadata: Metadata = {
   title: "Sign In",
-  description: "Sign in to your Gaming Haven account to access your game collection and dashboard",
+  description:
+    "Sign in to your Gaming Haven account to access your game collection and dashboard",
   openGraph: {
     title: "Sign In | Gaming Haven",
-    description: "Sign in to your Gaming Haven account to access your game collection and dashboard",
+    description:
+      "Sign in to your Gaming Haven account to access your game collection and dashboard",
     images: [
       {
         url: "/game-logo.svg",
@@ -27,7 +30,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Sign In | Gaming Haven",
-    description: "Sign in to your Gaming Haven account to access your game collection and dashboard",
+    description:
+      "Sign in to your Gaming Haven account to access your game collection and dashboard",
     images: [
       {
         url: "/game-logo.svg",
@@ -47,7 +51,7 @@ function SignInContent() {
           className="absolute inset-0 md:hidden"
           style={{
             backgroundImage:
-              "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+              "url('/mobile-background.svg'), url('/mobile-background.svg')",
             backgroundSize: "100vw auto, 100vw auto",
             backgroundRepeat: "no-repeat, no-repeat",
             backgroundPosition: "top left, top 100vw",
@@ -58,13 +62,16 @@ function SignInContent() {
         <div
           className="absolute inset-0 hidden md:block"
           style={{
-            backgroundImage: "url('/desktop-home-bg.svg')",
+            backgroundImage: "url('/desktop-background.svg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "top center",
           }}
         />
       </div>
+
+      {/* Animated WASD Keys - For mobile and desktop */}
+      <WasdKeycaps className="right-0 top-0 z-20" />
 
       {/* Content with overlay */}
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
@@ -78,15 +85,6 @@ function SignInContent() {
             </div>
 
             <SignInForm />
-
-            <div className="text-center">
-              <Link
-                href="/auth/password-recovery"
-                className="text-sm text-violet-600 transition-colors hover:text-violet-900"
-              >
-                Forgot your password?
-              </Link>
-            </div>
 
             <div className="text-center">
               <Body className="text-sm text-gray">
@@ -108,44 +106,46 @@ function SignInContent() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={
-      <div className="relative min-h-screen bg-gray-white">
-        <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
-          <div
-            className="absolute inset-0 md:hidden"
-            style={{
-              backgroundImage:
-                "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
-              backgroundSize: "100vw auto, 100vw auto",
-              backgroundRepeat: "no-repeat, no-repeat",
-              backgroundPosition: "top left, top 100vw",
-            }}
-          />
-          <div
-            className="absolute inset-0 hidden md:block"
-            style={{
-              backgroundImage: "url('/desktop-home-bg.svg')",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "top center",
-            }}
-          />
-        </div>
-        <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="space-y-6 p-8 backdrop-blur-sm">
-              <div className="space-y-2 text-center">
-                <H1 className="animate-fade-in-from-bottom">Welcome back</H1>
-                <Body className="text-gray">Loading...</Body>
-              </div>
-              <div className="flex justify-center">
-                <LoadingSpinner />
-              </div>
-            </Card>
+    <Suspense
+      fallback={
+        <div className="relative min-h-screen bg-gray-white">
+          <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
+            <div
+              className="absolute inset-0 md:hidden"
+              style={{
+                backgroundImage:
+                  "url('/mobile-background.svg'), url('/mobile-background.svg')",
+                backgroundSize: "100vw auto, 100vw auto",
+                backgroundRepeat: "no-repeat, no-repeat",
+                backgroundPosition: "top left, top 100vw",
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden md:block"
+              style={{
+                backgroundImage: "url('/desktop-background.svg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "top center",
+              }}
+            />
+          </div>
+          <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+            <div className="w-full max-w-md">
+              <Card className="space-y-6 p-8 backdrop-blur-sm">
+                <div className="space-y-2 text-center">
+                  <H1 className="animate-fade-in-from-bottom">Welcome back</H1>
+                  <Body className="text-gray">Loading...</Body>
+                </div>
+                <div className="flex justify-center">
+                  <LoadingSpinner />
+                </div>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <SignInContent />
     </Suspense>
   );

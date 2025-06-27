@@ -63,18 +63,15 @@ export function SignUpForm() {
           </div>
         </div>
 
-                {/* Success Card */}
+        {/* Success Card */}
         <div className="rounded-secondary border border-green-600 bg-white p-4">
-          <Body className="text-sm text-green-600 font-medium">
+          <Body className="text-sm font-medium text-green-600">
             📧 We&apos;ve sent a confirmation email to your inbox
           </Body>
         </div>
 
         {/* Instructions */}
-        <div className="space-y-3">
-          
-          
-          </div>
+        <div className="space-y-3"></div>
       </div>
     );
   }
@@ -183,10 +180,10 @@ export function SignUpForm() {
         )}
       </div>
 
-      <Button 
-        type="submit" 
-        className="w-full bg-gradient-violet hover:opacity-90 text-white border-0" 
-        disabled={isLoading} 
+      <Button
+        type="submit"
+        className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
+        disabled={isLoading}
         size="lg"
       >
         {isLoading ? "Creating Account..." : "Create Account"}

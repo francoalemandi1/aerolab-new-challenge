@@ -28,12 +28,11 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
       onDeleteGame(id);
     } else {
       removeGame(id);
-      console.log("Game removed from collection:", id);
     }
   };
 
   const handleGameClick = (gameSlug: string) => {
-    router.push(`/home/${gameSlug}`);
+    router.push(`/games/${gameSlug}`);
   };
 
   return (

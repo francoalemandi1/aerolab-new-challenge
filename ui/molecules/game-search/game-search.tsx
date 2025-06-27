@@ -177,7 +177,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
                 <div
                   key={game.id}
                   onClick={() => handleGameSelect(game)}
-                  className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 hover:bg-pink-50 md:gap-4 md:px-6 md:py-4"
+                  className="flex cursor-pointer items-center gap-3 px-4 py-3 text-gray-900 hover:bg-violet-50 md:gap-4 md:px-6 md:py-4"
                 >
                   <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 md:h-14 md:w-14">
                     <GameThumbnailImage

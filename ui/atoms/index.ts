@@ -9,3 +9,4 @@ export * from "./optimized-image";
 export * from "./search-input";
 export * from "./toast";
 export * from "./typography";
+export * from "./wasd-keycaps";

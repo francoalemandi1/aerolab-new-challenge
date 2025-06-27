@@ -9,3 +9,4 @@ export * from "./filter-chips";
 export * from "./game-search";
 export * from "./games-grid";
 export * from "./media-carousel";
+export * from "./mobile-menu";

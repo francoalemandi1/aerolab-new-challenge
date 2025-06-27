@@ -11,7 +11,7 @@ export const GamingPageLayout = ({ className }: GamingPageLayoutProps) => {
   return (
     <div className={cn("px-6 py-8 md:px-12 md:py-12", className)}>
       {/* Header - Server Component */}
-      <AppHeader title="Gaming Haven Z" className="mb-8 md:mb-12" />
+      <AppHeader title="Gaming Haven Z" className="mb-8 md:mb-12" showMenu={true} />
 
       {/* Search - Client Component */}
       <div className="md:mx-auto md:max-w-2xl">

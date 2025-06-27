@@ -1,8 +1,34 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Aerolab Challenge",
-  description: "Secure authentication with Supabase and Next.js",
+  title: "Gaming Haven - Discover Your Next Favorite Game",
+  description: "Welcome to Gaming Haven - the ultimate platform to discover, collect, and explore your favorite games. Start building your gaming collection today!",
+  openGraph: {
+    title: "Gaming Haven - Discover Your Next Favorite Game",
+    description: "Welcome to Gaming Haven - the ultimate platform to discover, collect, and explore your favorite games. Start building your gaming collection today!",
+    images: [
+      {
+        url: "/game-logo.svg",
+        width: 512,
+        height: 512,
+        alt: "Gaming Haven - Discover Your Next Favorite Game",
+        type: "image/svg+xml",
+      },
+    ],
+    type: "website",
+    siteName: "Gaming Haven",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gaming Haven - Discover Your Next Favorite Game",
+    description: "Welcome to Gaming Haven - the ultimate platform to discover, collect, and explore your favorite games. Start building your gaming collection today!",
+    images: [
+      {
+        url: "/game-logo.svg",
+        alt: "Gaming Haven - Discover Your Next Favorite Game",
+      },
+    ],
+  },
 };
 
 export default function HomePage() {

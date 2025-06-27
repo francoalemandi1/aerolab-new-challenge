@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { H1, H2, Body } from "@/ui/atoms/typography";
@@ -10,7 +10,7 @@ import { CheckCircle, XCircle, Clock, ArrowRight, RefreshCw } from "lucide-react
 
 type CallbackStatus = "loading" | "success" | "expired" | "invalid" | "error";
 
-export default function AuthCallbackResultPage() {
+function AuthCallbackResultContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<CallbackStatus>("loading");
@@ -237,5 +237,53 @@ export default function AuthCallbackResultPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackResultPage() {
+  return (
+    <Suspense fallback={
+      <div className="relative min-h-screen bg-gray-white">
+        <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
+          <div
+            className="absolute inset-0 md:hidden"
+            style={{
+              backgroundImage:
+                "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+              backgroundSize: "100vw auto, 100vw auto",
+              backgroundRepeat: "no-repeat, no-repeat",
+              backgroundPosition: "top left, top 100vw",
+            }}
+          />
+          <div
+            className="absolute inset-0 hidden md:block"
+            style={{
+              backgroundImage: "url('/desktop-home-bg.svg')",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "top center",
+            }}
+          />
+        </div>
+        <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <Card className="space-y-6 p-8 backdrop-blur-sm">
+              <H1 className="text-center animate-fade-in-from-bottom">Email Confirmation</H1>
+              <div className="space-y-6 text-center">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600/10">
+                    <RefreshCw className="h-8 w-8 text-violet-600 animate-spin" />
+                  </div>
+                  <H2>Loading...</H2>
+                  <Body className="text-gray">Please wait while we load the page.</Body>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    }>
+      <AuthCallbackResultContent />
+    </Suspense>
   );
 } 

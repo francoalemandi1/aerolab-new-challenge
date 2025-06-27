@@ -29,26 +29,60 @@ export async function generateMetadata({
       };
     }
 
+    const gameDescription = gameData.summary || 
+      `Explore ${gameData.title} and add it to your gaming collection. ${gameData.genres?.[0] ? `Genre: ${gameData.genres[0]}.` : ''} ${gameData.releaseDate ? `Released: ${gameData.releaseDate}.` : ''}`.trim();
+
     return {
       title: `${gameData.title} - Gaming Haven`,
-      description:
-        gameData.summary ||
-        `Explore ${gameData.title} and add it to your gaming collection.`,
+      description: gameDescription,
+      keywords: [
+        gameData.title,
+        ...(gameData.genres || []),
+        "Gaming",
+        "Game Collection",
+        "IGDB",
+      ],
       openGraph: {
-        title: gameData.title,
-        description:
-          gameData.summary ||
-          `Explore ${gameData.title} and add it to your gaming collection.`,
-        images: gameData.imageUrl ? [gameData.imageUrl] : [],
+        title: `${gameData.title} | Gaming Haven`,
+        description: gameDescription,
+        images: gameData.imageUrl ? [
+          {
+            url: gameData.imageUrl,
+            width: 1200,
+            height: 630,
+            alt: `${gameData.title} - Game Cover`,
+            type: "image/jpeg",
+          },
+        ] : [
+          {
+            url: "/game-logo.svg",
+            width: 512,
+            height: 512,
+            alt: "Gaming Haven - Game Details",
+            type: "image/svg+xml",
+          },
+        ],
         type: "website",
+        siteName: "Gaming Haven",
+        locale: "en_US",
       },
       twitter: {
         card: "summary_large_image",
-        title: gameData.title,
-        description:
-          gameData.summary ||
-          `Explore ${gameData.title} and add it to your gaming collection.`,
-        images: gameData.imageUrl ? [gameData.imageUrl] : [],
+        title: `${gameData.title} | Gaming Haven`,
+        description: gameDescription,
+        images: gameData.imageUrl ? [
+          {
+            url: gameData.imageUrl,
+            alt: `${gameData.title} - Game Cover`,
+          },
+        ] : [
+          {
+            url: "/game-logo.svg",
+            alt: "Gaming Haven - Game Details",
+          },
+        ],
+        creator: "@gaminghaven",
+        site: "@gaminghaven",
       },
     };
   } catch {

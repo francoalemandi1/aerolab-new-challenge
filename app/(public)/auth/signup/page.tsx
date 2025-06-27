@@ -6,7 +6,33 @@ import { Card } from "@/ui/molecules/card";
 
 export const metadata: Metadata = {
   title: "Sign Up",
-  description: "Create your account to get started",
+  description: "Create your Gaming Haven account to start building your ultimate game collection",
+  openGraph: {
+    title: "Sign Up | Gaming Haven",
+    description: "Create your Gaming Haven account to start building your ultimate game collection",
+    images: [
+      {
+        url: "/game-logo.svg",
+        width: 512,
+        height: 512,
+        alt: "Gaming Haven - Sign Up",
+        type: "image/svg+xml",
+      },
+    ],
+    type: "website",
+    siteName: "Gaming Haven",
+  },
+  twitter: {
+    card: "summary",
+    title: "Sign Up | Gaming Haven",
+    description: "Create your Gaming Haven account to start building your ultimate game collection",
+    images: [
+      {
+        url: "/game-logo.svg",
+        alt: "Gaming Haven - Sign Up",
+      },
+    ],
+  },
 };
 
 export default function SignUpPage() {

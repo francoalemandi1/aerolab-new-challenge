@@ -39,7 +39,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ className }) => {
         {/* Hamburger button */}
         <button
           onClick={toggleMenu}
-          className="flex items-center justify-center rounded-md p-3 text-violet-600 hover:bg-violet-50 hover:text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="flex items-center justify-center rounded-md p-3 text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500"
           aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
         >
           {isOpen ? (
@@ -65,7 +65,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ className }) => {
                 <div className="flex items-center justify-end p-6 border-b border-gray-200">
                   <button
                     onClick={closeMenu}
-                    className="rounded-md p-3 text-violet-600 hover:bg-violet-50 hover:text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                    className="rounded-md p-3 text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500"
                     aria-label="Cerrar menú"
                   >
                     <X className="h-6 w-6" />
@@ -79,7 +79,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ className }) => {
                       variant="ghost" 
                       size="lg"
                       showIcon={true}
-                      className="w-full justify-start text-violet-600 hover:bg-violet-50 hover:text-violet-700 [&>svg]:text-violet-600 [&>svg]:h-6 [&>svg]:w-6"
+                      className="w-full justify-start text-violet-600 hover:bg-transparent hover:text-violet-600 [&>svg]:text-violet-600 [&>svg]:h-6 [&>svg]:w-6"
                     >
                       Cerrar sesión
                     </LogoutButton>

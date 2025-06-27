@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     shortcut: "/game-logo.svg",
     apple: "/game-logo.svg",
   },
+  metadataBase: new URL("https://gaming-haven.vercel.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -42,9 +43,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/game-logo.svg",
-        width: 64,
-        height: 72,
-        alt: "Gaming Haven Logo",
+        width: 512,
+        height: 512,
+        alt: "Gaming Haven - Your Ultimate Gaming Collection Platform",
+        type: "image/svg+xml",
       },
     ],
   },
@@ -53,7 +55,14 @@ export const metadata: Metadata = {
     title: "Gaming Haven",
     description:
       "Discover, collect, and explore your favorite games with Gaming Haven - your ultimate gaming collection platform",
-    images: ["/game-logo.svg"],
+    images: [
+      {
+        url: "/game-logo.svg",
+        alt: "Gaming Haven - Your Ultimate Gaming Collection Platform",
+      },
+    ],
+    creator: "@gaminghaven",
+    site: "@gaminghaven",
   },
   robots: {
     index: true,

@@ -1,15 +1,17 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { SignUpForm } from "../ui/organisms/signup-form";
+import { SignUpForm } from "../_ui/organisms/signup-form";
 import { H1, Body } from "@/ui/atoms/typography";
 import { Card } from "@/ui/molecules/card";
 
 export const metadata: Metadata = {
   title: "Sign Up",
-  description: "Create your Gaming Haven account to start building your ultimate game collection",
+  description:
+    "Create your Gaming Haven account to start building your ultimate game collection",
   openGraph: {
     title: "Sign Up | Gaming Haven",
-    description: "Create your Gaming Haven account to start building your ultimate game collection",
+    description:
+      "Create your Gaming Haven account to start building your ultimate game collection",
     images: [
       {
         url: "/game-logo.svg",
@@ -25,7 +27,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Sign Up | Gaming Haven",
-    description: "Create your Gaming Haven account to start building your ultimate game collection",
+    description:
+      "Create your Gaming Haven account to start building your ultimate game collection",
     images: [
       {
         url: "/game-logo.svg",
@@ -69,7 +72,9 @@ export default function SignUpPage() {
         <div className="w-full max-w-md">
           <Card className="space-y-6 p-8 backdrop-blur-sm">
             <div className="space-y-2 text-center">
-              <H1 className="animate-fade-in-from-bottom">Create your account</H1>
+              <H1 className="animate-fade-in-from-bottom">
+                Create your account
+              </H1>
               <Body className="text-gray">
                 Sign up to get started with your journey
               </Body>

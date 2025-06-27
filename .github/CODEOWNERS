@@ -34,6 +34,6 @@ README.md @francoalemandi1
 # Critical dependencies and security
 # These require extra attention
 /lib/supabase.ts @francoalemandi1
-/lib/mailgun.ts @francoalemandi1
+
 /middleware.ts @francoalemandi1
 /app/api/ @francoalemandi1 

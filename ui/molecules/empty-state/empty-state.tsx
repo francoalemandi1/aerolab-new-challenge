@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { H4, Body } from "@/ui/atoms";
+import { H4, Paragraph } from "@/ui/atoms";
 import Image from "next/image";
 
 interface EmptyStateProps {
@@ -43,7 +43,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Text content */}
       <div className="space-y-2 text-center md:space-y-3">
         <H4 className="text-violet-600">{title}</H4>
-        <Body className="text-gray md:text-lg">{description}</Body>
+        <Paragraph className="text-gray md:text-lg">{description}</Paragraph>
       </div>
     </div>
   );

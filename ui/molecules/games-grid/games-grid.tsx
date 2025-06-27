@@ -33,7 +33,7 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
   };
 
   const handleGameClick = (gameSlug: string) => {
-    router.push(`/home/${gameSlug}`);
+    router.push(`/games/${gameSlug}`);
   };
 
   return (

@@ -6,7 +6,13 @@ import Link from "next/link";
 import { H1, H2, Body } from "@/ui/atoms/typography";
 import { Button } from "@/ui/atoms/button";
 import { Card } from "@/ui/molecules/card";
-import { CheckCircle, XCircle, Clock, ArrowRight, RefreshCw } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  ArrowRight,
+  RefreshCw,
+} from "lucide-react";
 
 type CallbackStatus = "loading" | "success" | "expired" | "invalid" | "error";
 
@@ -17,13 +23,16 @@ function AuthCallbackResultContent() {
 
   useEffect(() => {
     const statusParam = searchParams.get("status") as CallbackStatus;
-    if (statusParam && ["success", "expired", "invalid", "error"].includes(statusParam)) {
+    if (
+      statusParam &&
+      ["success", "expired", "invalid", "error"].includes(statusParam)
+    ) {
       setStatus(statusParam);
-      
+
       // Auto-redirect on success
       if (statusParam === "success") {
         setTimeout(() => {
-          router.push("/home");
+          router.push("/games");
         }, 3000);
       }
     } else {
@@ -39,10 +48,12 @@ function AuthCallbackResultContent() {
           <div className="space-y-6 text-center">
             <div className="flex flex-col items-center space-y-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600/10">
-                <RefreshCw className="h-8 w-8 text-violet-600 animate-spin" />
+                <RefreshCw className="h-8 w-8 animate-spin text-violet-600" />
               </div>
               <H2>Processing confirmation...</H2>
-              <Body className="text-gray">Please wait while we verify your email.</Body>
+              <Body className="text-gray">
+                Please wait while we verify your email.
+              </Body>
             </div>
           </div>
         );
@@ -55,18 +66,20 @@ function AuthCallbackResultContent() {
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
               <H2 className="text-green-600">Email Confirmed Successfully!</H2>
-              <Body className="text-gray">Your account is now active and ready to use.</Body>
+              <Body className="text-gray">
+                Your account is now active and ready to use.
+              </Body>
             </div>
 
             <div className="rounded-secondary border border-green-600 bg-white p-4">
-              <Body className="text-sm text-green-600 font-medium">
+              <Body className="text-sm font-medium text-green-600">
                 ✅ Redirecting you to your dashboard in a few seconds...
               </Body>
             </div>
 
-            <Button 
-              onClick={() => router.push("/home")} 
-              className="w-full bg-gradient-violet hover:opacity-90 text-white border-0" 
+            <Button
+              onClick={() => router.push("/games")}
+              className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
               size="lg"
             >
               Continue to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
@@ -83,28 +96,30 @@ function AuthCallbackResultContent() {
               </div>
               <H2 className="text-yellow-600">Confirmation Link Expired</H2>
               <Body className="text-gray">
-                This email confirmation link has expired. Please request a new one.
+                This email confirmation link has expired. Please request a new
+                one.
               </Body>
             </div>
 
             <div className="rounded-secondary border border-yellow-600 bg-white p-4">
-              <Body className="text-sm text-yellow-600 font-medium">
+              <Body className="text-sm font-medium text-yellow-600">
                 ⏰ Confirmation links expire after 24 hours for security
               </Body>
             </div>
 
             <div className="space-y-3">
               <Link href="/auth/signup">
-                <Button 
-                  className="w-full bg-gradient-violet hover:opacity-90 text-white border-0"
+                <Button
+                  className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
                   size="lg"
                 >
-                  Request New Confirmation <ArrowRight className="ml-2 h-4 w-4" />
+                  Request New Confirmation{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              
+
               <Link href="/auth/signin">
-                <Button 
+                <Button
                   variant="outline"
                   className="w-full border-violet-600 text-violet-600 hover:bg-violet-50"
                   size="lg"
@@ -130,23 +145,23 @@ function AuthCallbackResultContent() {
             </div>
 
             <div className="rounded-secondary border border-red-600 bg-white p-4">
-              <Body className="text-sm text-red-600 font-medium">
+              <Body className="text-sm font-medium text-red-600">
                 ❌ Please check your email for the correct confirmation link
               </Body>
             </div>
 
             <div className="space-y-3">
               <Link href="/auth/signin">
-                <Button 
-                  className="w-full bg-gradient-violet hover:opacity-90 text-white border-0"
+                <Button
+                  className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
                   size="lg"
                 >
                   Try Signing In <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              
+
               <Link href="/auth/signup">
-                <Button 
+                <Button
                   variant="outline"
                   className="w-full border-violet-600 text-violet-600 hover:bg-violet-50"
                   size="lg"
@@ -168,27 +183,28 @@ function AuthCallbackResultContent() {
               </div>
               <H2 className="text-red-600">Something Went Wrong</H2>
               <Body className="text-gray">
-                We encountered an error while confirming your email. Please try again.
+                We encountered an error while confirming your email. Please try
+                again.
               </Body>
             </div>
 
             <div className="rounded-secondary border border-red-600 bg-white p-4">
-              <Body className="text-sm text-red-600 font-medium">
+              <Body className="text-sm font-medium text-red-600">
                 🔄 If the problem persists, please contact support
               </Body>
             </div>
 
             <div className="space-y-3">
-              <Button 
+              <Button
                 onClick={() => window.location.reload()}
-                className="w-full bg-gradient-violet hover:opacity-90 text-white border-0"
+                className="w-full border-0 bg-gradient-violet text-white hover:opacity-90"
                 size="lg"
               >
                 Try Again <RefreshCw className="ml-2 h-4 w-4" />
               </Button>
-              
+
               <Link href="/auth/signin">
-                <Button 
+                <Button
                   variant="outline"
                   className="w-full border-violet-600 text-violet-600 hover:bg-violet-50"
                   size="lg"
@@ -231,7 +247,9 @@ function AuthCallbackResultContent() {
       <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
         <div className="w-full max-w-md">
           <Card className="space-y-6 p-8 backdrop-blur-sm">
-            <H1 className="text-center animate-fade-in-from-bottom">Email Confirmation</H1>
+            <H1 className="animate-fade-in-from-bottom text-center">
+              Email Confirmation
+            </H1>
             {renderContent()}
           </Card>
         </div>
@@ -242,48 +260,54 @@ function AuthCallbackResultContent() {
 
 export default function AuthCallbackResultPage() {
   return (
-    <Suspense fallback={
-      <div className="relative min-h-screen bg-gray-white">
-        <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
-          <div
-            className="absolute inset-0 md:hidden"
-            style={{
-              backgroundImage:
-                "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
-              backgroundSize: "100vw auto, 100vw auto",
-              backgroundRepeat: "no-repeat, no-repeat",
-              backgroundPosition: "top left, top 100vw",
-            }}
-          />
-          <div
-            className="absolute inset-0 hidden md:block"
-            style={{
-              backgroundImage: "url('/desktop-home-bg.svg')",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "top center",
-            }}
-          />
-        </div>
-        <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <Card className="space-y-6 p-8 backdrop-blur-sm">
-              <H1 className="text-center animate-fade-in-from-bottom">Email Confirmation</H1>
-              <div className="space-y-6 text-center">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600/10">
-                    <RefreshCw className="h-8 w-8 text-violet-600 animate-spin" />
+    <Suspense
+      fallback={
+        <div className="relative min-h-screen bg-gray-white">
+          <div className="absolute inset-x-0 top-0 z-0 h-80 overflow-hidden">
+            <div
+              className="absolute inset-0 md:hidden"
+              style={{
+                backgroundImage:
+                  "url('/home-absolute-bg.svg'), url('/home-absolute-bg.svg')",
+                backgroundSize: "100vw auto, 100vw auto",
+                backgroundRepeat: "no-repeat, no-repeat",
+                backgroundPosition: "top left, top 100vw",
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden md:block"
+              style={{
+                backgroundImage: "url('/desktop-home-bg.svg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "top center",
+              }}
+            />
+          </div>
+          <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+            <div className="w-full max-w-md">
+              <Card className="space-y-6 p-8 backdrop-blur-sm">
+                <H1 className="animate-fade-in-from-bottom text-center">
+                  Email Confirmation
+                </H1>
+                <div className="space-y-6 text-center">
+                  <div className="flex flex-col items-center space-y-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-600/10">
+                      <RefreshCw className="h-8 w-8 animate-spin text-violet-600" />
+                    </div>
+                    <H2>Loading...</H2>
+                    <Body className="text-gray">
+                      Please wait while we load the page.
+                    </Body>
                   </div>
-                  <H2>Loading...</H2>
-                  <Body className="text-gray">Please wait while we load the page.</Body>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <AuthCallbackResultContent />
     </Suspense>
   );
-} 
+}

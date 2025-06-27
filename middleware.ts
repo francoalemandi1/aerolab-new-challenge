@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
 
   // Define protected and public routes
   const isProtectedRoute =
-    pathname.startsWith("/home") ||
+    pathname.startsWith("/games") ||
     pathname.startsWith("/dashboard") ||
     pathname === "/";
 
@@ -42,15 +42,15 @@ export async function middleware(request: NextRequest) {
     // Redirect authenticated users away from auth pages to home
     if (isAuthRoute) {
       console.log(
-        `🔄 Redirecting authenticated user from ${pathname} to /home`
+        `🔄 Redirecting authenticated user from ${pathname} to /games`
       );
-      return NextResponse.redirect(new URL("/home", request.url));
+      return NextResponse.redirect(new URL("/games", request.url));
     }
 
     // Redirect authenticated users from root to home
     if (pathname === "/") {
-      console.log(`🔄 Redirecting authenticated user from root to /home`);
-      return NextResponse.redirect(new URL("/home", request.url));
+      console.log(`🔄 Redirecting authenticated user from root to /games`);
+      return NextResponse.redirect(new URL("/games", request.url));
     }
   } else {
     // If user is not authenticated and trying to access protected routes

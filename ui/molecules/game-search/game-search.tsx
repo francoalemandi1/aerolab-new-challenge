@@ -66,7 +66,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
       onGameSelect(igdbGame);
     } else {
       // Navegar a la página de detalle del juego usando el slug oficial de IGDB
-      router.push(`/home/${igdbGame.slug}`);
+      router.push(`/games/${igdbGame.slug}`);
     }
 
     // Limpiar el input después de seleccionar

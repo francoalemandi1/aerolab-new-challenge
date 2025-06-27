@@ -70,11 +70,11 @@ export function useAuth() {
       if (event === "SIGNED_OUT") {
         // Check if we're on a protected page and redirect to signin
         const currentPath = window.location.pathname;
-        const isProtectedRoute = 
-          currentPath.startsWith("/home") ||
+        const isProtectedRoute =
+          currentPath.startsWith("/games") ||
           currentPath.startsWith("/dashboard") ||
           currentPath === "/";
-        
+
         if (isProtectedRoute) {
           console.log("🔄 Redirecting unauthenticated user to /auth/signin");
           router.push("/auth/signin");
@@ -110,7 +110,7 @@ export function useAuth() {
 
       // Force a session refresh to trigger auth state change
       await supabase.auth.refreshSession();
-      
+
       return {};
     } catch (error) {
       console.error("Sign in error:", error);
@@ -160,7 +160,7 @@ export function useAuth() {
 
       // Clear the session locally to trigger auth state change
       await supabase.auth.signOut();
-      
+
       return {};
     } catch (error) {
       console.error("Sign out error:", error);

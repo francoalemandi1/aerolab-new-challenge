@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { signInSchema, type SignInFormData } from "@/lib/validations";
 import { Button } from "@/ui/atoms/button";
@@ -12,6 +13,8 @@ import { AlertCircle, Eye, EyeOff } from "lucide-react";
 
 export function SignInForm() {
   const { signIn } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +39,13 @@ export function SignInForm() {
         return;
       }
 
-      // Success - the useAuth hook will handle redirection
+      // Success - redirect to intended page or home
+      const redirectTo = searchParams.get("redirectTo");
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else {
+        router.push("/home");
+      }
     } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -55,7 +64,7 @@ export function SignInForm() {
 
       <div className="space-y-2">
         <label htmlFor="email" className="block">
-          <Body className="font-medium text-gray-dark">Email</Body>
+          <Body className="font-medium text-violet-600">Email</Body>
         </label>
         <Input
           id="email"
@@ -66,7 +75,7 @@ export function SignInForm() {
           className={
             errors.email
               ? "border-red-600 focus:border-red-600 focus:ring-red-600/20"
-              : ""
+              : "focus:border-violet-600 focus:ring-violet-600/20"
           }
         />
         {errors.email && (
@@ -76,7 +85,7 @@ export function SignInForm() {
 
       <div className="space-y-2">
         <label htmlFor="password" className="block">
-          <Body className="font-medium text-gray-dark">Password</Body>
+          <Body className="font-medium text-violet-600">Password</Body>
         </label>
         <div className="relative">
           <Input
@@ -85,13 +94,13 @@ export function SignInForm() {
             placeholder="Enter your password"
             {...register("password")}
             aria-invalid={errors.password ? "true" : "false"}
-            className={`pr-12 ${errors.password ? "border-red-600 focus:border-red-600 focus:ring-red-600/20" : ""}`}
+            className={`pr-12 ${errors.password ? "border-red-600 focus:border-red-600 focus:ring-red-600/20" : "focus:border-violet-600 focus:ring-violet-600/20"}`}
           />
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-gray hover:bg-gray-light/50 hover:text-gray-dark"
+            className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 text-gray hover:bg-violet-50 hover:text-violet-600"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
@@ -109,7 +118,12 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading} size="lg">
+      <Button 
+        type="submit" 
+        className="w-full bg-gradient-violet hover:opacity-90 text-white border-0" 
+        disabled={isLoading} 
+        size="lg"
+      >
         {isLoading ? "Signing in..." : "Sign In"}
       </Button>
     </form>

@@ -5,25 +5,10 @@ import { createSupabaseMiddlewareClient } from "@/lib/supabase";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for static files, API routes we don't want to protect, and Next.js internals
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api") ||
-    pathname.startsWith("/static") ||
-    pathname.includes(".") ||
-    pathname === "/robots.txt" ||
-    pathname === "/sitemap.xml" ||
-    pathname === "/manifest.json"
-  ) {
-    return NextResponse.next();
-  }
-
   try {
-    // Create supabase client with the request
-    const supabase = createSupabaseMiddlewareClient(
-      request,
-      NextResponse.next()
-    );
+    // Create response and supabase client once
+    const response = NextResponse.next();
+    const supabase = createSupabaseMiddlewareClient(request, response);
 
     // Get session
     const {

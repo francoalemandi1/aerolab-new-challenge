@@ -32,11 +32,11 @@ export const metadata: Metadata = {
     shortcut: "/game-logo.svg",
     apple: "/game-logo.svg",
   },
-  metadataBase: new URL("https://gaming-haven.vercel.app"),
+  metadataBase: new URL("https://the-gaming-haven.vercel.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://gaming-haven.vercel.app",
+    url: "https://the-gaming-haven.vercel.app",
     title: "Gaming Haven",
     description:
       "Discover, collect, and explore your favorite games with Gaming Haven - your ultimate gaming collection platform",

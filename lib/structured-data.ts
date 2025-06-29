@@ -133,7 +133,7 @@ export function generateWebPageStructuredData({
   dateModified,
 }: StructuredDataProps) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://gaming-haven.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL || "https://the-gaming-haven.vercel.app";
 
   return {
     "@context": "https://schema.org",

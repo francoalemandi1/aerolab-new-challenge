@@ -7,6 +7,7 @@ import { getGameBySlugSSR } from "@/lib/igdb";
 import { getAuthenticatedUser } from "@/lib/supabase";
 import GameNotFound from "./not-found";
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import GameContentWrapper from "./_ui/organisms/GameContentWrapper";
 
 interface GameDetailPageProps {
@@ -125,6 +126,12 @@ export async function generateMetadata({
 export default async function GameDetailPage({ params }: GameDetailPageProps) {
   const { slug } = await params;
 
+  // Get current URL for sharing
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+  const currentUrl = `${protocol}://${host}/games/${slug}`;
+
   // Server-side data fetching using IGDB slug
   const gameData = getGameBySlugSSR(slug);
 
@@ -171,7 +178,10 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
 
           {/* Game Content - Resolve promise inside JSX */}
           <Suspense fallback={<LoadingSpinner />}>
-            <GameContentWrapper gameDataPromise={gameData} />
+            <GameContentWrapper
+              gameDataPromise={gameData}
+              shareUrl={currentUrl}
+            />
           </Suspense>
         </div>
       </div>

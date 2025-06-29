@@ -8,6 +8,7 @@ export * from "./input";
 export * from "./loading-spinner";
 export * from "./optimized-image";
 export * from "./search-input";
+export * from "./share-button";
 export * from "./toast";
 export * from "./typography";
 export * from "./wasd-keycaps";

@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import { createSupabaseServerClient } from "@/lib/supabase";
-import { redirect } from "next/navigation";
+import { getAuthenticatedUser } from "@/lib/supabase";
 import { AppHeader, GameSearch } from "@/ui/molecules";
 import { SavedGamesSection } from "@/ui/organisms";
 
@@ -39,16 +38,7 @@ export const metadata: Metadata = {
 };
 
 export default async function GamesPage() {
-  const supabase = await createSupabaseServerClient();
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/auth/signin");
-  }
+  await getAuthenticatedUser(); // Ensures user is authenticated
 
   return (
     <div className="px-6 py-8 md:px-12 md:py-16">

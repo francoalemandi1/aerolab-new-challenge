@@ -42,7 +42,7 @@ A modern gaming collection platform built with Next.js, Supabase, and TypeScript
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
    IGDB_CLIENT_ID=your_igdb_client_id
-   IGDB_CLIENT_SECRET=your_igdb_client_secret
+   IGDB_ACCESS_TOKEN=your_igdb_client_secret
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 

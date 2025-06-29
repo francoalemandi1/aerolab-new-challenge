@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
+import { redirect } from "next/navigation";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -89,4 +90,19 @@ export const createSupabaseAdminClient = () => {
       persistSession: false,
     },
   });
+};
+
+// Wrapper para server components que requieren autenticación
+export const getAuthenticatedUser = async () => {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/auth/signin");
+  }
+
+  return { user, supabase };
 };

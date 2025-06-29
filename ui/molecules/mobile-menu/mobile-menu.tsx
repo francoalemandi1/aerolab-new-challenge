@@ -19,7 +19,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ className }) => {
     <div className={cn("relative", className)}>
       {/* Desktop Logout Button */}
       <div className="hidden md:flex">
-        <LogoutButton size="lg" showIcon>
+        <LogoutButton size="lg" showIcon className="px-0">
           Cerrar sesión
         </LogoutButton>
       </div>

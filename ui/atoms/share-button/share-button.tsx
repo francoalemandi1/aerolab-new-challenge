@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Share2, Copy, Check } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface ShareButtonProps {
   url: string;
@@ -51,7 +52,11 @@ export default function ShareButton({ url }: ShareButtonProps) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full p-0 text-violet-600 transition-colors hover:bg-violet-50"
+          className={cn(
+            "flex h-10 w-10 items-center justify-center rounded-full p-0 text-violet-600 transition-colors",
+            "hover:bg-violet-50",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-white"
+          )}
           aria-label="Share game"
         >
           <Share2 className="h-5 w-5" />
@@ -66,7 +71,11 @@ export default function ShareButton({ url }: ShareButtonProps) {
         >
           <DropdownMenu.Item
             onSelect={handleWhatsAppShare}
-            className="flex w-full cursor-pointer items-center justify-start gap-3 rounded-md px-3 py-3 text-base text-gray-dark outline-none transition-colors hover:bg-gray-light"
+            className={cn(
+              "flex w-full cursor-pointer items-center justify-start gap-3 rounded-md px-3 py-3 text-base text-gray-dark outline-none transition-colors",
+              "hover:bg-gray-light",
+              "focus-visible:bg-gray-light focus-visible:outline-none"
+            )}
           >
             <div className="flex h-5 w-5 items-center justify-center text-green-600">
               <Image
@@ -84,7 +93,11 @@ export default function ShareButton({ url }: ShareButtonProps) {
 
           <DropdownMenu.Item
             onSelect={handleCopyLink}
-            className="flex w-full cursor-pointer items-center justify-start gap-3 rounded-md px-3 py-3 text-base text-gray-dark outline-none transition-colors hover:bg-gray-light"
+            className={cn(
+              "flex w-full cursor-pointer items-center justify-start gap-3 rounded-md px-3 py-3 text-base text-gray-dark outline-none transition-colors",
+              "hover:bg-gray-light",
+              "focus-visible:bg-gray-light focus-visible:outline-none"
+            )}
           >
             {copied ? (
               <>

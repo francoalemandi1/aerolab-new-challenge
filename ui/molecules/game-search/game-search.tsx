@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search, Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,6 @@ export const GameSearch: React.FC<GameSearchProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const router = useRouter();
   const { isGameSaved } = useGames();
@@ -98,14 +97,12 @@ export const GameSearch: React.FC<GameSearchProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (selectedIndex !== null && itemRefs.current[selectedIndex]) {
-      itemRefs.current[selectedIndex]?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [selectedIndex]);
+  const getRefCallback =
+    (index: number) => (element: HTMLDivElement | null) => {
+      if (element && index === selectedIndex) {
+        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    };
 
   return (
     <div
@@ -231,9 +228,7 @@ export const GameSearch: React.FC<GameSearchProps> = ({
                     <CommandGroup>
                       {displayResults.map((game, index) => (
                         <CommandItem
-                          ref={el => {
-                            itemRefs.current[index] = el;
-                          }}
+                          ref={getRefCallback(index)}
                           key={game.id}
                           value={`${game.title}-${game.id}`}
                           onSelect={() => handleGameSelect(game)}

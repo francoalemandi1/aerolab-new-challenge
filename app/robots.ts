@@ -14,10 +14,10 @@ export default function robots(): MetadataRoute.Robots {
           "/auth/signup",
           "/auth/password-recovery",
           "/auth/reset-password",
+          "/games/*",
         ],
         disallow: [
           "/api/",
-          "/games/*", // Protected routes - require authentication
           "/auth/callback*", // OAuth callback routes
           "/_next/", // Next.js internals
           "/_vercel/", // Vercel internals
@@ -36,19 +36,14 @@ export default function robots(): MetadataRoute.Robots {
           "/auth/signup",
           "/auth/password-recovery",
           "/auth/reset-password",
-        ],
-        disallow: [
-          "/api/",
           "/games/*",
-          "/auth/callback*",
-          "/_next/",
-          "/_vercel/",
         ],
+        disallow: ["/api/", "/auth/callback*", "/_next/", "/_vercel/"],
       },
       // Bing-specific rules
       {
         userAgent: "Bingbot",
-        allow: ["/", "/auth/signin", "/auth/signup"],
+        allow: ["/", "/auth/signin", "/auth/signup", "/games/*"],
         disallow: [
           "/api/",
           "/games/*",

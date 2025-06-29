@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { Star, Calendar, Gamepad2 } from "lucide-react";
-import { H1, H2, H3, GameDetailImage, GameStatChip } from "@/ui/atoms";
+import {
+  H1,
+  H2,
+  H3,
+  GameDetailImage,
+  GameStatChip,
+  ShareButton,
+} from "@/ui/atoms";
 import { MediaCarousel, GameContentSection } from "@/ui/molecules";
 import { GameFromIGDB } from "@/types/igdb";
 import Image from "next/image";
-import GameNotFound from "../not-found";
+import GameNotFound from "../../not-found";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { GameCollectionButton } from "@/ui/organisms";
 
@@ -25,8 +32,10 @@ async function CollectionButton({ gameData }: { gameData: GameFromIGDB }) {
 // Game Content Wrapper - resolves promise inside JSX
 export default async function GameContentWrapper({
   gameDataPromise,
+  shareUrl,
 }: {
   gameDataPromise: Promise<GameFromIGDB | null>;
+  shareUrl: string;
 }) {
   try {
     const gameData = await gameDataPromise;
@@ -40,7 +49,12 @@ export default async function GameContentWrapper({
         {/* Game Header */}
         <div className="mb-8 mt-8 flex flex-col gap-6 md:mt-16">
           {/* Game Cover and Basic Info */}
-          <div className="flex gap-6 md:gap-8">
+          <div className="relative flex gap-6 md:gap-8">
+            {/* Share Button - Top Right */}
+            <div className="absolute right-0 top-0 z-10">
+              <ShareButton url={shareUrl} />
+            </div>
+
             <div className="relative h-36 w-24 flex-shrink-0 overflow-hidden rounded-lg md:h-48 md:w-32">
               <GameDetailImage
                 imageId={gameData.imageId || ""}

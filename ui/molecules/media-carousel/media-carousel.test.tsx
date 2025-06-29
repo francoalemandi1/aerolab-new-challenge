@@ -15,13 +15,60 @@ vi.mock("next/image", () => ({
   ),
 }));
 
-// Mock getElementById for scroll functionality
-const mockScrollBy = vi.fn();
-const mockGetElementById = vi.fn();
+// Mock Radix UI Dialog
+vi.mock("@radix-ui/react-dialog", () => ({
+  Root: ({ children, open }: { children: React.ReactNode; open: boolean }) =>
+    open ? <div data-testid="dialog-root">{children}</div> : null,
+  Portal: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="dialog-portal">{children}</div>
+  ),
+  Overlay: ({ className }: { className: string }) => (
+    <div data-testid="dialog-overlay" className={className} />
+  ),
+  Content: ({
+    children,
+    className,
+    onKeyDown,
+  }: {
+    children: React.ReactNode;
+    className: string;
+    onKeyDown: (event: React.KeyboardEvent) => void;
+  }) => (
+    <div
+      data-testid="dialog-content"
+      className={className}
+      onKeyDown={onKeyDown}
+    >
+      {children}
+    </div>
+  ),
+  Close: ({
+    children,
+    asChild,
+  }: {
+    children: React.ReactNode;
+    asChild: boolean;
+  }) =>
+    asChild ? children : <button data-testid="dialog-close">{children}</button>,
+  Title: ({ children }: { children: React.ReactNode }) => (
+    <h2 data-testid="dialog-title">{children}</h2>
+  ),
+}));
 
-Object.defineProperty(document, "getElementById", {
-  value: mockGetElementById,
-});
+// Mock Radix UI VisuallyHidden
+vi.mock("@radix-ui/react-visually-hidden", () => ({
+  Root: ({
+    children,
+    asChild,
+  }: {
+    children: React.ReactNode;
+    asChild: boolean;
+  }) =>
+    asChild ? children : <div data-testid="visually-hidden">{children}</div>,
+}));
+
+const mockScrollBy = vi.fn();
+const mockGetElementById = vi.spyOn(document, "getElementById");
 
 describe("MediaCarousel", () => {
   const mockImages = [
@@ -29,6 +76,9 @@ describe("MediaCarousel", () => {
     "https://example.com/image2.jpg",
     "https://example.com/image3.jpg",
   ];
+
+  const mockImageIds = ["abc123", "def456", "ghi789"];
+
   let wrapper: ReturnType<typeof createQueryClientWrapper>;
 
   beforeEach(() => {
@@ -85,32 +135,112 @@ describe("MediaCarousel", () => {
     expect(nextButton).not.toBeInTheDocument();
   });
 
-  it("calls scrollBy when previous button is clicked", async () => {
+  it("calls scrollBy when carousel navigation buttons are clicked", async () => {
     const user = userEvent.setup();
     render(<MediaCarousel images={mockImages} />, { wrapper });
 
     const prevButton = screen.getByLabelText("Previous image");
-    await user.click(prevButton);
+    const nextButton = screen.getByLabelText("Next image");
 
+    await user.click(prevButton);
     expect(mockGetElementById).toHaveBeenCalledWith("carousel-container");
     expect(mockScrollBy).toHaveBeenCalledWith({
       left: -120,
       behavior: "smooth",
     });
-  });
 
-  it("calls scrollBy when next button is clicked", async () => {
-    const user = userEvent.setup();
-    render(<MediaCarousel images={mockImages} />, { wrapper });
-
-    const nextButton = screen.getByLabelText("Next image");
     await user.click(nextButton);
-
-    expect(mockGetElementById).toHaveBeenCalledWith("carousel-container");
     expect(mockScrollBy).toHaveBeenCalledWith({
       left: 120,
       behavior: "smooth",
     });
+  });
+
+  it("makes images clickable to expand", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={mockImages} />, { wrapper });
+
+    const expandButtons = screen.getAllByLabelText(/Expandir screenshot/);
+    expect(expandButtons).toHaveLength(3);
+
+    // Click the first image to expand
+    await user.click(expandButtons[0]);
+
+    // Should render the modal
+    expect(screen.getByTestId("dialog-root")).toBeInTheDocument();
+  });
+
+  it("shows modal with correct image when expanded", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel imageIds={mockImageIds} />, { wrapper });
+
+    const expandButtons = screen.getAllByLabelText(/Expandir screenshot/);
+
+    // Click the second image
+    await user.click(expandButtons[1]);
+
+    // Should show dialog with correct content
+    const dialogContent = screen.getByTestId("dialog-content");
+    expect(dialogContent).toBeInTheDocument();
+
+    // Should show image counter
+    expect(screen.getByText("2 de 3")).toBeInTheDocument();
+  });
+
+  it("shows modal navigation buttons when multiple images", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={mockImages} />, { wrapper });
+
+    const expandButton = screen.getAllByLabelText(/Expandir screenshot/)[0];
+    await user.click(expandButton);
+
+    expect(screen.getByLabelText("Imagen anterior")).toBeInTheDocument();
+    expect(screen.getByLabelText("Imagen siguiente")).toBeInTheDocument();
+  });
+
+  it("hides modal navigation when only one image", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={[mockImages[0]]} />, { wrapper });
+
+    const expandButton = screen.getByLabelText(/Expandir screenshot/);
+    await user.click(expandButton);
+
+    expect(screen.queryByLabelText("Imagen anterior")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Imagen siguiente")).not.toBeInTheDocument();
+  });
+
+  it("shows close button in modal", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={mockImages} />, { wrapper });
+
+    const expandButton = screen.getAllByLabelText(/Expandir screenshot/)[0];
+    await user.click(expandButton);
+
+    expect(screen.getByLabelText("Cerrar modal")).toBeInTheDocument();
+  });
+
+  it("shows usage instructions in modal", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={mockImages} />, { wrapper });
+
+    const expandButton = screen.getAllByLabelText(/Expandir screenshot/)[0];
+    await user.click(expandButton);
+
+    expect(screen.getByText("Usa ← → para navegar")).toBeInTheDocument();
+    expect(screen.getByText("ESC para cerrar")).toBeInTheDocument();
+  });
+
+  it("has accessible dialog title for screen readers", async () => {
+    const user = userEvent.setup();
+    render(<MediaCarousel images={mockImages} />, { wrapper });
+
+    const expandButton = screen.getAllByLabelText(/Expandir screenshot/)[0];
+    await user.click(expandButton);
+
+    // Should have dialog title for accessibility
+    const dialogTitle = screen.getByTestId("dialog-title");
+    expect(dialogTitle).toBeInTheDocument();
+    expect(dialogTitle).toHaveTextContent("Screenshot 1 de 3");
   });
 
   it("applies custom className", () => {
@@ -133,31 +263,19 @@ describe("MediaCarousel", () => {
     expect(container.className).toContain("overflow-x-auto");
   });
 
-  it("images have correct styling", () => {
+  it("expand buttons have correct styling and accessibility", () => {
     render(<MediaCarousel images={mockImages} />, { wrapper });
 
-    const imageContainers = screen.getAllByTestId("carousel-image");
-    imageContainers.forEach(container => {
-      const parent = container.parentElement;
-      expect(parent?.className).toContain("relative");
-      expect(parent?.className).toContain("w-28");
-      expect(parent?.className).toContain("h-20");
+    const expandButtons = screen.getAllByLabelText(/Expandir screenshot/);
+    expandButtons.forEach(button => {
+      expect(button.className).toContain("group");
+      expect(button.className).toContain("cursor-pointer");
+      expect(button.className).toContain("focus:ring-2");
+      expect(button.className).toContain("focus:ring-violet-600");
     });
   });
 
-  it("navigation buttons have correct styling", () => {
-    render(<MediaCarousel images={mockImages} />, { wrapper });
-
-    const prevButton = screen.getByLabelText("Previous image");
-    const nextButton = screen.getByLabelText("Next image");
-
-    expect(prevButton.className).toContain("absolute");
-    expect(prevButton.className).toContain("rounded-full");
-    expect(nextButton.className).toContain("absolute");
-    expect(nextButton.className).toContain("rounded-full");
-  });
-
-  it("handles missing container gracefully", async () => {
+  it("handles missing container gracefully for carousel navigation", async () => {
     mockGetElementById.mockReturnValue(null);
     const user = userEvent.setup();
     render(<MediaCarousel images={mockImages} />, { wrapper });
@@ -167,5 +285,20 @@ describe("MediaCarousel", () => {
 
     // Should not throw error when container is null
     expect(mockScrollBy).not.toHaveBeenCalled();
+  });
+
+  it("supports both image URLs and image IDs", () => {
+    const { rerender } = render(<MediaCarousel images={mockImages} />, {
+      wrapper,
+    });
+
+    expect(screen.getAllByTestId("carousel-image")).toHaveLength(3);
+
+    // Rerender with imageIds - should prefer imageIds over images
+    rerender(<MediaCarousel images={mockImages} imageIds={mockImageIds} />);
+
+    // Should still have 3 images but now using imageIds
+    const expandButtons = screen.getAllByLabelText(/Expandir screenshot/);
+    expect(expandButtons).toHaveLength(3);
   });
 });

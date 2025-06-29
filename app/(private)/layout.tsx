@@ -35,7 +35,7 @@ export default function PrivateLayout({ children }: PrivateLayoutProps) {
       </div>
 
       {/* Animated WASD Keys - For mobile and desktop */}
-      <WasdKeycaps className="right-0 top-0 z-50" />
+      <WasdKeycaps className="right-0 top-0" />
 
       {/* Content with overlay */}
       <div className="relative z-10">{children}</div>

@@ -7,7 +7,7 @@ import { getGameBySlugSSR } from "@/lib/igdb";
 import { getAuthenticatedUser } from "@/lib/supabase";
 import GameNotFound from "./not-found";
 import { Suspense } from "react";
-import GameContentWrapper from "./_components/GameContentWrapper";
+import GameContentWrapper from "./_ui/organisms/GameContentWrapper";
 
 interface GameDetailPageProps {
   params: Promise<{ slug: string }>;

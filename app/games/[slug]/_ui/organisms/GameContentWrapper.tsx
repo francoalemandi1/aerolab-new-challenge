@@ -4,7 +4,7 @@ import { H1, H2, H3, GameDetailImage, GameStatChip } from "@/ui/atoms";
 import { MediaCarousel, GameContentSection } from "@/ui/molecules";
 import { GameFromIGDB } from "@/types/igdb";
 import Image from "next/image";
-import GameNotFound from "../not-found";
+import GameNotFound from "../../not-found";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { GameCollectionButton } from "@/ui/organisms";
 

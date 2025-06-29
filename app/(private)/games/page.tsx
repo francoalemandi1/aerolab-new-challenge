@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { getAuthenticatedUser } from "@/lib/supabase";
 import { AppHeader, GameSearch } from "@/ui/molecules";
 import { SavedGamesSection } from "@/ui/organisms";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Gaming Haven - Your Game Collection",
@@ -38,8 +39,11 @@ export const metadata: Metadata = {
 };
 
 export default async function GamesPage() {
-  await getAuthenticatedUser(); // Ensures user is authenticated
+  const { user, error } = await getAuthenticatedUser();
 
+  if (!user || error) {
+    redirect("/auth/signin");
+  }
   return (
     <div className="px-6 py-8 md:px-12 md:py-16">
       {/* Header - Server Component */}

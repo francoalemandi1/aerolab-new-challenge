@@ -16,8 +16,6 @@ interface GameDetailPageProps {
 
 // AuthenticatedControls component - only renders for authenticated users
 async function AuthenticatedControls() {
-  await getAuthenticatedUser(); // Ensures user is authenticated
-
   return (
     <>
       {/* Back Button and Search - Desktop: same row */}
@@ -125,6 +123,7 @@ export async function generateMetadata({
 
 export default async function GameDetailPage({ params }: GameDetailPageProps) {
   const { slug } = await params;
+  const { user } = await getAuthenticatedUser(); // Ensures user is authenticated
 
   // Get current URL for sharing
   const headersList = await headers();
@@ -174,7 +173,7 @@ export default async function GameDetailPage({ params }: GameDetailPageProps) {
       <div className="relative z-10 px-6 py-8 md:px-12 md:pb-12 md:pt-32">
         <div className="mx-auto max-w-4xl">
           {/* Authenticated Controls: Back Button and Search */}
-          <AuthenticatedControls />
+          {user ? <AuthenticatedControls /> : null}
 
           {/* Game Content - Resolve promise inside JSX */}
           <Suspense fallback={<LoadingSpinner />}>

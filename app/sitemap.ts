@@ -1,8 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://gaming-haven.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL as string;
   const currentDate = new Date();
 
   // Static routes
@@ -24,12 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/games`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.9,
     },
     {
       url: `${baseUrl}/games/*`,

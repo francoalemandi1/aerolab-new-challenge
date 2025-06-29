@@ -4,7 +4,6 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { GameCard } from "@/ui/atoms";
 import { useGames, FilterType } from "@/hooks/useGames";
-import { useRouter } from "next/navigation";
 
 interface GamesGridProps {
   className?: string;
@@ -18,7 +17,6 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
   onDeleteGame,
 }) => {
   const { getFilteredGames, removeGame } = useGames();
-  const router = useRouter();
 
   // Obtener juegos filtrados según el filtro activo
   const filteredGames = getFilteredGames(filter);
@@ -29,10 +27,6 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
     } else {
       removeGame(id);
     }
-  };
-
-  const handleGameClick = (gameSlug: string) => {
-    router.push(`/games/${gameSlug}`);
   };
 
   return (
@@ -50,7 +44,7 @@ export const GamesGrid: React.FC<GamesGridProps> = ({
           imageUrl={game.imageUrl}
           imageId={game.imageId}
           onDelete={handleDeleteGame}
-          onClick={() => handleGameClick(game.slug)}
+          href={`/games/${game.slug}`}
         />
       ))}
     </div>
